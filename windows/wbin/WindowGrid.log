@@ -1,0 +1,73 @@
+
+================================================================================
+
+15:46:44.419 [APP] (34524:15800) WindowGrid.exe      : Starting WindowGrid.exe (1.3.1.1)
+--------------------------------------------------------------------------------
+15:46:44.450 [APP] (34524:15800) WindowGrid.exe      : Killing Other: WindowGrid (26804) - "H:\win_bin\WindowGrid.exe"
+15:46:44.453 [APP] (34524:15800) WindowGrid.exe      : Unable to CloseMainWindow
+15:46:44.510 [APP] (34524:15800) WindowGrid.exe      : [ERROR] Killed Other Instance
+--------------------------------------------------------------------------------
+15:46:48.136 [APP] (34524:15800) WindowGrid.exe      : Already Up to Date! (1.3.1.1)
+15:46:49.031 [APP] (34524:15800) WindowGrid.exe      : Failed to initialize WindowGrid
+[EXCEPTION] 
+Type: System.ComponentModel.Win32Exception
+Message: Access is denied
+Stack Trace:
+   at System.Diagnostics.Process.StartWithCreateProcess(ProcessStartInfo startInfo)
+   at WindowGrid.ProcessHandler.Start()
+   at WindowGrid.WindowGridApp.Hooks.Initialize()
+   at WindowGrid.WindowGridApp.Initialize(String[] args)
+15:46:52.658 [APP] (34524:15800) WindowGrid.exe      : Failed to uninitialize WindowGrid
+[EXCEPTION] 
+Type: System.InvalidOperationException
+Message: No process is associated with this object.
+Stack Trace:
+   at System.Diagnostics.Process.EnsureState(State state)
+   at System.Diagnostics.Process.get_HasExited()
+   at WindowGrid.ProcessHandler.Stop(Boolean wait)
+   at WindowGrid.WindowGridApp.Hooks.Uninitialize()
+   at WindowGrid.WindowGridApp.Uninitialize()
+
+================================================================================
+
+15:47:10.986 [APP] (07956:34432) WindowGrid.exe      : Starting WindowGrid.exe (1.3.1.1)
+15:47:11.756 [APP] (07956:34432) WindowGrid.exe      : Already Up to Date! (1.3.1.1)
+15:47:13.156 [X86] (28852:32504) rundll32.exe        : Starting WindowGrid32.dll (1.3.1.1)
+15:47:13.159 [X64] (16588:29504) rundll32.exe        : Starting WindowGrid64.dll (1.3.1.1)
+15:47:17.344 [APP] (07956:34432) WindowGrid.exe      : GetValue: HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer - NoWindowMinimizingShortcuts
+[EXCEPTION] 
+Type: System.Security.SecurityException
+Message: Requested registry access is not allowed.
+Stack Trace:
+   at System.ThrowHelper.ThrowSecurityException(ExceptionResource resource)
+   at Microsoft.Win32.RegistryKey.OpenSubKey(String name, Boolean writable)
+   at WindowGrid.RegistryHelper.GetValue(String keyName, String valueName, Object defaultValue)
+15:47:26.707 [X64] (07956:34432) WindowGrid.exe      : + Process
+15:47:26.709 [X64] (07956:34432) WindowGrid.exe      : + Hook: 0000000001BE10AE
+15:47:26.866 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 +
+15:47:27.315 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 -
+15:47:29.176 [X64] (07956:34432) WindowGrid.exe      : Mouse: 101 -
+15:47:29.179 [X64] (07956:34432) WindowGrid.exe      : - Hook: 0000000001BE10AE
+15:47:35.393 [X64] (07956:34432) WindowGrid.exe      : + Hook: 0000000001BE10AE
+15:47:36.228 [X64] (07956:34432) WindowGrid.exe      : Mouse: 101 -
+15:47:36.230 [X64] (07956:34432) WindowGrid.exe      : - Hook: 0000000001BE10AE
+15:47:44.626 [X64] (07956:34432) WindowGrid.exe      : + Hook: 0000000001BE10AE
+15:47:44.732 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 +
+15:47:45.021 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 -
+15:47:47.251 [X64] (07956:34432) WindowGrid.exe      : Mouse: 101 -
+15:47:47.255 [X64] (07956:34432) WindowGrid.exe      : - Hook: 0000000001BE10AE
+15:47:48.417 [X64] (07956:34432) WindowGrid.exe      : + Hook: 0000000001BE10AE
+15:47:49.072 [X64] (07956:34432) WindowGrid.exe      : Mouse: 101 -
+15:47:49.074 [X64] (07956:34432) WindowGrid.exe      : - Hook: 0000000001BE10AE
+15:48:01.498 [X64] (07956:34432) WindowGrid.exe      : + Hook: 0000000001BE10AE
+15:48:01.811 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 +
+15:48:01.995 [X64] (07956:34432) WindowGrid.exe      : Mouse: 102 -
+15:48:03.274 [X64] (07956:34432) WindowGrid.exe      : Mouse: 101 -
+15:48:03.276 [X64] (07956:34432) WindowGrid.exe      : - Hook: 0000000001BE10AE
+15:49:35.172 [X64] (35240:04244) explorer.exe        : + Process
+15:49:35.173 [X64] (35240:04244) explorer.exe        : + Hook: 000000000026107E
+15:49:35.179 [X64] (35240:04244) explorer.exe        : Mouse: 101 -
+15:49:35.180 [X64] (35240:04244) explorer.exe        : - Hook: 000000000026107E
+15:49:37.632 [X64] (35240:04244) explorer.exe        : + Hook: 000000000026107E
+15:49:38.158 [X64] (35240:04244) explorer.exe        : Mouse: 101 -
+15:49:38.159 [X64] (35240:04244) explorer.exe        : - Hook: 000000000026107E

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=AmberChrome
+Comment=Dark theme with amber text and highlights. Inspired by old amber monochrome CRT monitors. Based off Vertex Maia Dark theme.
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=AmberChrome
+MetacityTheme=Vertex-Maia-Dark
+IconTheme=Vertex-Maia
+CursorTheme=Breeze
+ButtonLayout=menu:minimize,maximize,close
