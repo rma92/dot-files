@@ -15,14 +15,7 @@ echo "$USER@$ZHOSTNAME `pwd`"
 
 bindkey -v
 export KEYTIMEOUT=1
-function zle-line-init {
-  RPS1="${${KEYMAP/vicmd/[NORMAL]}/(main|viins)/[INSERT]}"
-  RPS2=$RPS1
-  PROMPT=$ZPROMPT
-  zle reset-prompt
-  zle -R
-}
-function zle-keymap-select {
+function zle-line-init zle-keymap-select {
   RPS1="${${KEYMAP/vicmd/[NORMAL]}/(main|viins)/[INSERT]}"
   RPS2=$RPS1
   PROMPT=$ZPROMPT
@@ -47,3 +40,4 @@ function precmd() {
 
 zle -N zle-line-init
 zle -N zle-keymap-select
+
