@@ -22,21 +22,21 @@ Full=%SystemRoot%\System32\imageres.dll,-54
 Empty=%SystemRoot%\System32\imageres.dll,-55
 
 [Control Panel\Cursors]
-Arrow=%SystemRoot%\cursors\aero_arrow.cur
-Help=%SystemRoot%\cursors\aero_helpsel.cur
-AppStarting=%SystemRoot%\cursors\aero_working.ani
-Wait=%SystemRoot%\cursors\aero_busy.ani
-NWPen=%SystemRoot%\cursors\aero_pen.cur
-No=%SystemRoot%\cursors\aero_unavail.cur
-SizeNS=%SystemRoot%\cursors\aero_ns.cur
-SizeWE=%SystemRoot%\cursors\aero_ew.cur
-Crosshair=
-IBeam=
-SizeNWSE=%SystemRoot%\cursors\aero_nwse.cur
-SizeNESW=%SystemRoot%\cursors\aero_nesw.cur
-SizeAll=%SystemRoot%\cursors\aero_move.cur
-UpArrow=%SystemRoot%\cursors\aero_up.cur
-DefaultValue=Windows Aero
+Arrow=%SystemRoot%\cursors\arrow_rl.cur
+Help=%SystemRoot%\cursors\help_rl.cur
+AppStarting=%SystemRoot%\cursors\wait_rl.ani
+Wait=%SystemRoot%\cursors\busy_rl.ani
+NWPen=%SystemRoot%\cursors\pen_rl.cur
+No=%SystemRoot%\cursors\no_rl.cur
+SizeNS=%SystemRoot%\cursors\size4_rl.cur
+SizeWcrE=%SystemRoot%\cursors\size3_rl.cur
+Crosshair=%SystemRoot%\cursors\cross_rl.cur
+IBeam=%SystemRoot%\cursors\beam_rl.cur
+SizeNWSE=%SystemRoot%\cursors\size2_rl.cur
+SizeNESW=%SystemRoot%\cursors\size1_rl.cur
+SizeAll=%SystemRoot%\cursors\move_rl.cur
+UpArrow=%SystemRoot%\cursors\up_rl.cur
+DefaultValue=Windows Black (extra large)
 Hand=%SystemRoot%\cursors\aero_link.cur
 Link=
 
