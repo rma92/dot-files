@@ -27,7 +27,14 @@ iex $cmd
 move windows\vimfiles .
 move windows\_vimrc .
 ```
+## Using symlinks for VIM into a git repository instead of copy
+The following links should be created in %USERPROFILE% (open cmd).
+```
+mklink _vimrc \local\git\dot-files\windows\_vimrc
+mklink /D vimfiles \local\git\dot-files\windows\vimfiles
 
+```
+<!--
 # Fonts
 This contains various fonts.  They go in the .font folder on Linux
 ## Cloning using PowerShell
@@ -35,3 +42,4 @@ This contains various fonts.  They go in the .font folder on Linux
 $cmd = "svn export https://github.com/rma92/dot-files/trunk/fonts"
 iex $cmd
 ```
+-->
