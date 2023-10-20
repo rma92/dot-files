@@ -1,0 +1,52 @@
+set nu
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+set timeoutlen=100
+set mouse=a
+set ttimeoutlen=0
+set ai!
+
+color torte
+try
+  color bbx
+catch /^Vim\%((\a\+)\)\=:E185/
+  " deal with it
+endtry
+
+syntax on
+set backspace=indent,eol,start
+set winaltkeys=yes
+source $VIMRUNTIME/mswin.vim
+behave mswin
+setlocal spell spelllang=en_us
+set colorcolumn=72,80,100
+
+if &term =~ '^screen'
+    " tmux knows the extended mouse mode
+    set ttymouse=xterm2
+endif
+
+if has('gui_running')
+  if has("gui_gtk2") || has("gui_gtk3")
+    set guifont=Hack\ 14
+    set guifont=Bloomberg\ Fixed\ Unicode\ N\ 20
+  elseif has("gui_photon")
+    set guifont=Hack:s14
+  elseif has("gui_kde")
+    set guifont=Courier\ New/11/-1/5/50/0/0/0/1/0
+  elseif has("x11")
+    set guifont=-*-courier-medium-r-normal-*-*-180-*-*-m-*-*
+  elseif has('gui_win32')
+    set guifont=Consolas:h14:cDEFAULT
+    set guifont=Hack:h14:cDEFAULT
+    "set guifont=Bloomberg\ Fixed\ Unicode\ K:h14:cDEFAULT
+  else
+    set guifont=Hack\ 14
+  endif
+endif
+
+:set list listchars=tab:>-
+
+:highlight ExtraWhitespace ctermbg=red guibg=red
+:match ExtraWhitespace /\s\+$/

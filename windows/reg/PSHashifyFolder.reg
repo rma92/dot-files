@@ -1,0 +1,26 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\PsGetfileHashes]
+@="Get File Hashes"
+"NoWorkingDirectory"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\PsGetfileHashes\command]
+;@="cmd.exe /s /k pushd \"%V\" && start cmd /k"
+;FileName, MD5, SHA1, and SHA256
+@="cmd.exe /s /c pushd \"%V\" && powershell.exe -Command \"Get-ChildItem -File | ForEach-Object { [PSCustomObject]@{FileName=$_.Name; MD5=(Get-FileHash $_.FullName -Algorithm MD5).Hash; SHA1=(Get-FileHash $_.FullName -Algorithm SHA1).Hash; SHA256=(Get-FileHash $_.FullName -Algorithm SHA256).Hash} } | Out-GridView | pause\""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\PsGetfileHashes]
+@="Get File Hashes"
+"NoWorkingDirectory"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\PsGetfileHashes\command]
+@="cmd.exe /s /c pushd \"%V\" && powershell.exe -Command \"Get-ChildItem -File | ForEach-Object { [PSCustomObject]@{FileName=$_.Name; MD5=(Get-FileHash $_.FullName -Algorithm MD5).Hash; SHA1=(Get-FileHash $_.FullName -Algorithm SHA1).Hash; SHA256=(Get-FileHash $_.FullName -Algorithm SHA256).Hash} } | Out-GridView | pause\""
+
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\PsGetfileHashes]
+@="Get File Hashes"
+"NoWorkingDirectory"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\PsGetfileHashes\command]
+@="cmd.exe /s /c pushd \"%V\" && powershell.exe -Command \"Get-ChildItem -File | ForEach-Object { [PSCustomObject]@{FileName=$_.Name; MD5=(Get-FileHash $_.FullName -Algorithm MD5).Hash; SHA1=(Get-FileHash $_.FullName -Algorithm SHA1).Hash; SHA256=(Get-FileHash $_.FullName -Algorithm SHA256).Hash} } | Out-GridView | pause\""
+

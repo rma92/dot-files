@@ -1,0 +1,107 @@
+; Copyright © Microsoft Corp.
+
+[Theme]
+; High Contrast #1 - IDS_THEME_DISPLAYNAME_HC1
+DisplayName=windows_bloomberg_roadgeek5w_dark
+
+; Computer - SHIDI_SERVER
+[CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon]
+DefaultValue=%SystemRoot%\System32\imageres.dll,-109
+
+; UsersFiles - SHIDI_USERFILES
+[CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon]
+DefaultValue=%SystemRoot%\System32\imageres.dll,-123
+
+; Network - SHIDI_MYNETWORK
+[CLSID\{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\DefaultIcon]
+DefaultValue=%SystemRoot%\System32\imageres.dll,-25
+
+; Recycle Bin - SHIDI_RECYCLERFULL SHIDI_RECYCLER
+[CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\DefaultIcon]
+Full=%SystemRoot%\System32\imageres.dll,-54
+Empty=%SystemRoot%\System32\imageres.dll,-55
+
+[Control Panel\Cursors]
+Arrow=%SystemRoot%\cursors\arrow_rl.cur
+Help=%SystemRoot%\cursors\help_rl.cur
+AppStarting=%SystemRoot%\cursors\wait_rl.ani
+Wait=%SystemRoot%\cursors\busy_rl.ani
+NWPen=%SystemRoot%\cursors\pen_rl.cur
+No=%SystemRoot%\cursors\no_rl.cur
+SizeNS=%SystemRoot%\cursors\size4_rl.cur
+SizeWcrE=%SystemRoot%\cursors\size3_rl.cur
+Crosshair=%SystemRoot%\cursors\cross_rl.cur
+IBeam=%SystemRoot%\cursors\beam_rl.cur
+SizeNWSE=%SystemRoot%\cursors\size2_rl.cur
+SizeNESW=%SystemRoot%\cursors\size1_rl.cur
+SizeAll=%SystemRoot%\cursors\move_rl.cur
+UpArrow=%SystemRoot%\cursors\up_rl.cur
+DefaultValue=Windows Black (extra large)
+Hand=%SystemRoot%\cursors\aero_link.cur
+Link=
+
+[Control Panel\Desktop]
+Wallpaper=
+TileWallpaper=0
+WallpaperStyle=10
+Pattern=
+
+[Control Panel\Desktop\WindowMetrics]
+
+[Metrics]
+NonclientMetrics=88 1 0 0 1 0 0 0 17 0 0 0 17 0 0 0 18 0 0 0 18 0 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 144 1 0 0 0 0 0 0 0 0 0 0 82 111 97 100 103 101 101 107 32 50 48 48 53 32 83 101 114 105 101 115 32 53 87 0 0 0 0 0 0 0 0 0 15 0 0 0 15 0 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 188 2 0 0 0 0 0 0 0 0 0 0 82 111 97 100 103 101 101 107 32 50 48 48 53 32 83 101 114 105 101 115 32 53 87 0 0 0 0 0 0 0 0 0 18 0 0 0 18 0 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 144 1 0 0 0 0 0 0 0 0 0 0 82 111 97 100 103 101 101 107 32 50 48 48 53 32 83 101 114 105 101 115 32 53 87 0 0 0 0 0 0 0 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 144 1 0 0 0 0 0 0 0 0 0 0 82 111 97 100 103 101 101 107 32 50 48 48 53 32 83 101 114 105 101 115 32 53 87 0 0 0 0 0 0 0 0 0 243 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 144 1 0 0 0 0 0 0 0 0 0 0 66 108 111 111 109 98 101 114 103 32 70 105 120 101 100 32 85 110 105 99 111 100 101 32 78 0 0 0 0 0 0 0 0 0 0 0                   
+LangID=1033
+IconMetrics=76 0 0 0 75 0 0 0 75 0 0 0 1 0 0 0 245 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 188 2 0 0 0 0 0 1 0 0 0 0 77 105 99 114 111 115 111 102 116 32 83 97 110 115 32 83 101 114 105 102 0 0 0 0 0 0 0 0 0 0 0 0                   
+
+[VisualStyles]
+Path=
+ColorStyle=High Contrast #1
+Size=Normal
+Transparency=0
+ColorizationColor=0X6B74B8FC
+Composition=0
+VisualStyleVersion=10
+
+[boot]
+SCRNSAVE.EXE=
+
+[MasterThemeSelector]
+MTSM=DABJDKT
+
+[Sounds]
+; IDS_SCHEME_DEFAULT
+SchemeName=@mmres.dll,-800
+
+[Control Panel\Colors]
+Scrollbar=0 0 0
+Background=0 0 0
+ActiveTitle=243 159 65
+InactiveTitle=121 79 33
+Menu=0 0 0
+Window=0 0 0
+WindowFrame=243 159 65
+MenuText=243 159 65
+WindowText=243 159 65
+TitleText=0 0 0
+ActiveBorder=243 159 65
+InactiveBorder=121 79 33
+AppWorkspace=0 0 0
+Hilight=243 159 65
+HilightText=0 0 0
+ButtonFace=0 0 0
+ButtonShadow=128 128 128
+GrayText=121 79 33
+ButtonText=243 159 65
+InactiveTitleText=0 0 0
+ButtonHilight=192 192 192
+ButtonDkShadow=243 159 65
+ButtonLight=243 159 65
+InfoText=243 159 65
+InfoWindow=0 0 0
+ButtonAlternateFace=192 192 192
+HotTrackingColor=128 128 255
+GradientActiveTitle=0 0 255
+GradientInactiveTitle=0 255 255
+MenuHilight=54 155 255
+MenuHilightText=0 0 0
+MenuBar=0 0 0
