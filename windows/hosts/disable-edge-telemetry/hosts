@@ -233,3 +233,10 @@
 #0.0.0.0 www.msftncsi.com
 #0.0.0.0 www.msn.com
 0.0.0.0 xpay-int.microsoft.com
+
+0.0.0.0 ads.jetpackdigital.com
+0.0.0.0 .areyouahuman.com.
+0.0.0.0 us-east-1.profile-api.ads.linkedin.com
+0.0.0.0 pixel.rubiconproject.com
+0.0.0.0 .agkn.com
+0.0.0.0 .dc.ads.linkedin.com
