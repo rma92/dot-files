@@ -122,6 +122,7 @@ The numbers mean:
 
 The CSV files contain the config, the Excel sheet was used to build out the script.
 
+bvscripts.zip contains a directory of scripts from https://github.com/jfoster/blackviper-scripts for addtional verisons of Windows.
 ## Tweaked Script
 Run this in powershell, copy the output, run as admin to set the service config.
 
