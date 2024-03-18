@@ -10,10 +10,25 @@ sc config Themes Start= disabled
 sc config TrkWks Start= disabled
 sc config DispBrokerDesktopSvc Start= disabled
 
+sc config wpdbusenum start= disabled
+sc config WSearch Start= disabled
 
-sc config iphlpsvc start= disabled
-sc config WinHttpAutoProxySvc start= disabled
-sc config DnsCache start= disabled
+REM other things
+sc config camsvc start= disabled
+sc config dps start= disabled
+sc config wdiservicehost start= disabled
+setsvc iphlpsvc 4
+setsvc WinHttpAutoProxySvc 4
+setsvc DnsCache 4
+
+
+rem this must be done with the registry.
+rem sc config iphlpsvc start= disabled
+rem sc config WinHttpAutoProxySvc start= disabled
+rem sc config DnsCache start= disabled
+rem sc config SgrmBroker start= disabled (system guard)
+rem sc config wscsvc start= disabled
+rem sc config SecurityHealthService start= disabled
 
 REM net sec stuff
 REM sc config KeyIso Start= disabled
@@ -24,10 +39,13 @@ REM sc config Wcmsvc start= disabled
 rem sc config NcbServe Start= disabled
 rem sc config Netman Start= disabled
 rem sc config netprofm Start= disabled
+rem sc config nsi start= disabled
 
 REM Windows Update/Modules
 rem sc config TrustedInstaller start= disabled
 
+REM app compatibility - compatability options don't work with these disabled.
+rem sc config pcasvc start= disabled
 
 REM WinRT stuff
 REM sc config TokenBroker start= disabled
