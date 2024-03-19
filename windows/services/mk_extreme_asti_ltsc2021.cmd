@@ -20,9 +20,9 @@ REM other things
 sc config camsvc start= disabled
 sc config dps start= disabled
 sc config wdiservicehost start= disabled
-setsvc iphlpsvc 4
-setsvc WinHttpAutoProxySvc 4
-setsvc DnsCache 4
+start cmd /c setsvc iphlpsvc 4
+start cmd /c setsvc WinHttpAutoProxySvc 4
+start cmd /c setsvc DnsCache 4
 
 
 rem this must be done with the registry.
