@@ -1,8 +1,9 @@
 sc config SSDPSRV start= disabled
 sc config AxInstSV Start= disabled
-rem sc config CDPSvc Start= disabled
+sc config CDPSvc Start= disabled
 sc config DusmSvc Start= disabled
-sc config EventLog Start= disabled
+REM disabling eventlog breaks the wifi/wwan mini van
+REM sc config EventLog Start= disabled
 sc config FontCache Start= disabled
 sc config CscService start= disabled
 
