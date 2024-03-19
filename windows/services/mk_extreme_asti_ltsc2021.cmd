@@ -1,5 +1,6 @@
+sc config SSDPSRV start= disabled
 sc config AxInstSV Start= disabled
-sc config CDPSvc Start= disabled
+rem sc config CDPSvc Start= disabled
 sc config DusmSvc Start= disabled
 sc config EventLog Start= disabled
 sc config FontCache Start= disabled
@@ -9,10 +10,12 @@ sc config ShellHWDetection Start= disabled
 sc config Themes Start= disabled
 sc config TrkWks Start= disabled
 sc config DispBrokerDesktopSvc Start= disabled
+sc config DispEnhancementService Start= disabled
 
 sc config wpdbusenum start= disabled
 sc config WSearch Start= disabled
 
+REM above here
 REM other things
 sc config camsvc start= disabled
 sc config dps start= disabled
@@ -31,7 +34,7 @@ rem sc config wscsvc start= disabled
 rem sc config SecurityHealthService start= disabled
 
 REM net sec stuff
-REM sc config KeyIso Start= disabled
+sc config KeyIso Start= disabled
 
 REM network connections stuff
 REM sc config RmService start= disabled
