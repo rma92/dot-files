@@ -99,3 +99,6 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32]
 "MicrosoftEdgeAutoLaunch_Async"=hex:ff,ff,ff,ff,ff,ff,ff,ff
 
+;Disable Bing in the Windows 11 Start Menu
+[HKEY_LOCAL_MACHINE\user\Software\Policies\Microsoft\Windows\Explorer]
+"DisableSearchBoxSuggestions"=dword:00000001
