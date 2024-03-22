@@ -1,0 +1,101 @@
+Windows Registry Editor Version 5.00
+;Apply the Windows 11 WIM to a disk.
+;Open Regedit, go to HKLM, and Load the following Hives (assuming Windows 11 was put on D:\
+; D:\Windows\System32\config\SYSTEM as sys
+; D:\Windows\System32\config\SOFTWARE as soft
+; D:\Users\Default\NTUSER.DAT as user
+;
+;To alter user registries, replace HKEY_CURRENT_USER\SOFTWARE with HKEY_LOCAL_MACHINE\user\Software
+;To alter SOFTWARE registries, replace HKEY_LOCAL_MACHINE\SOFTWARE with HKEY_LOCAL_MACHINE\soft
+;To alter SYSTEM registries, replace HKEY_LOCAL_MACHINE\SYSTEM with HKEY_LOCAL_MACHINE\sys
+;
+;Services: run regedit as TI, set HKLM\sys\ControlSet001\Services\WinDefend Start to 4
+;Do this also for BITS, WaaSMedicSvc, wuauserv, UsoSvc [Windows Update]
+; WSearch (windows search)
+; Tunes: AJRouter, CSCService [offline files], DiagTrack [telemetry], MapsBroker, RetailDemo, WpcMonSvc, XblAuthManager, XblGameSave, XboxGipSvc, XboxNetApiSvc
+; Security: WerSvc, WinRM, wisvc, WMPNetworkSvc, workfolderssvc
+; Apply Windows11_sys_services_config_asTI.reg either from WinPE or runas TrustedInstaller from another Windows system.
+
+;Configure Automatic Updates
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Windows\WindowsUpdate\AU]
+"NoAutoUpdate"=dword:00000001
+
+;Disable Explorer SmartScreen
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Windows\System]
+"EnableSmartScreen"=dword:00000000
+
+;Disable Defender AntiVirus
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Windows Defender]
+"DisableAntiSpyware"=dword:00000001
+
+;Enable "Do not preserve zone information in file attachments" for Users
+;[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments]
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments]
+"SaveZoneInformation"=dword:00000001
+
+;Disable News
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Feeds]
+"ShellFeedsTaskbarViewMode"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Windows\Windows Feeds]
+"EnableFeeds"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Dsh]
+"AllowNewsAndInterests"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\soft\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
+"value"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"TaskbarDa"=dword:00000000
+
+;Disable Background Apps
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications]
+"GlobalUserDisabled"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Search]
+"BackgroundAppGlobalToggle"=dword:00000000
+
+;Disable delivery optimization
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Windows\DeliveryOptimization]
+"DODownloadMode"=dword:00000000
+
+;Disable Copilot
+[HKEY_LOCAL_MACHINE\user\Software\Policies\Microsoft\Windows\WindowsCopilot]
+"TurnOffWindowsCopilot"=dword:00000001
+
+;Win11 Old context menu
+[HKEY_LOCAL_MACHINE\user\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
+@=""
+
+;Browser: Disable annoyances, install ublock origin
+[HKEY_LOCAL_MACHINE\user\Software\Policies\Microsoft\Edge\Main]
+"StartupPage"="about:blank"
+
+[HKEY_LOCAL_MACHINE\user\Software\Policies\Microsoft\Edge]
+"DefaultSearchProviderEnabled"=dword:00000001
+"DefaultSearchProviderName"="Google"
+"DefaultSearchProviderSearchURL"="https://www.google.com/search?q={searchTerms}"
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Microsoft\Edge\ExtensionInstallForcelist\1]
+@="odfafepnkmbhccpbejgmiehpchacaeak"
+
+;this might need to be in the 32-bit registry/Wow64node.
+[HKEY_LOCAL_MACHINE\soft\Microsoft\Edge\Extensions\odfafepnkmbhccpbejgmiehpchacaeak]
+"update_url"="https://edge.microsoft.com/extensionwebstorebase/v1/crx"
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Google\Chrome\ExtensionInstallWhitelist]
+"1"="cjpalhdlnbpafiamejdnhcphjbkeiagm"
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Google\Chrome\ExtensionInstallForcelist]
+"1"="cjpalhdlnbpafiamejdnhcphjbkeiagm"
+
+[HKEY_LOCAL_MACHINE\soft\Policies\Google\Chrome\URLBlacklist]
+"1"="javascript://*"
+
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+"MicrosoftEdgeAutoLaunch_Async"=hex:ff,ff,ff,ff,ff,ff,ff,ff
+
+[HKEY_LOCAL_MACHINE\user\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32]
+"MicrosoftEdgeAutoLaunch_Async"=hex:ff,ff,ff,ff,ff,ff,ff,ff
+
