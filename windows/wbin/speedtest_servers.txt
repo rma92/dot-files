@@ -1,0 +1,2 @@
+#T-Mobile, Everglades.
+speedtest -s 45791
