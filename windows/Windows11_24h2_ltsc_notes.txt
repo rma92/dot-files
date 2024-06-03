@@ -1,0 +1,5 @@
+Changes needed for 24h2
+Context Menu
+* Context menu: use RunAsTi regedit
+* Rename Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2} to a{86ca1aa0-34aa-4e8b-a509-50c905bae2a2} - this needs to be done as TrustedInstaller.
+* Restart explorer, then it works.
