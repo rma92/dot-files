@@ -3,6 +3,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\cmdprompt]
 @="@shell32.dll,-8506"
 "NoWorkingDirectory"=""
+"Icon"="cmd.exe"
 
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\cmdprompt\command]
 @="cmd.exe /s /k pushd \"%V\""
@@ -10,6 +11,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\cmdprompt]
 @="@shell32.dll,-8506"
 "NoWorkingDirectory"=""
+"Icon"="cmd.exe"
 
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\cmdprompt\command]
 @="cmd.exe /s /k pushd \"%V\""
@@ -17,6 +19,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\cmdprompt]
 @="@shell32.dll,-8506"
 "NoWorkingDirectory"=""
+"Icon"="cmd.exe"
 
 [HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\cmdprompt\command]
 @="cmd.exe /s /k pushd \"%V\""
