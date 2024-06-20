@@ -1,0 +1,16 @@
+Changes needed for 24h2
+Context Menu
+* Context menu: use RunAsTi regedit
+* Rename Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2} to a{86ca1aa0-34aa-4e8b-a509-50c905bae2a2} - this needs to be done as TrustedInstaller.
+* Restart explorer, then it works.
+
+Disabling Windows Defender
+To disable Windows Defender using group policy, tamper protection needs to be disabled. 
+Use the Windows Security app, go to "Virus & Threat protection", turn off tamper proof (ideally all the options if you are disabling it).
+You can then use the the group policy setting to disable Defender:
+Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Turn off Microsoft Defender Antivirus (choose Enabled).
+Then run gpupdate /force.
+
+If you open Windows Security after using this method, and go to Virus & threat protection, there will be a warning: "Your Virus & threat protection is managed by your organization." and "No active antivirus provider. Your device is vulnerable."
+
+On Server 2025, you can still disable it through Server Manager or PowerShell.
