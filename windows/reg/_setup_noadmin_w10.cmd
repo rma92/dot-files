@@ -11,7 +11,7 @@ REG IMPORT PuttyDefaultSettings-TextMode92X-small.reg
 REG IMPORT "Windows 11 Old Context Menu.reg"
 ECHO Press any key to restart explorer (note all explorer.exe)
 pause
-taskkill -f -im explorer.exe && start explorer
+taskkill -f -im explorer.exe -fi "USERNAME eq %USERNAME%" && start explorer
 
 ECHO if using Windows 10, press any key to disable new alt tab UI.
 pause
