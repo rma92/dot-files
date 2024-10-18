@@ -1,5 +1,7 @@
+REM this installs vim in this directory and adds it to the right-click menu
 if not defined CURL_PROXY_OPTS set CURL_PROXY_OPTS=
 
+cd %~dp0
 curl %CURL_PROXY_OPTS% -L "https://github.com/vim/vim-win32-installer/releases/download/v9.1.0/gvim_9.1.0_x64_signed.zip" --output gvim_9.1.0_x64_signed.zip
 powershell -command "Expand-Archive -Force gvim_9.1.0_x64_signed.zip gvim91p"
 SETX VIM %CD%\gvim91p\vim
@@ -17,5 +19,5 @@ curl %CURL_PROXY_OPTS% https://raw.githubusercontent.com/rma92/dot-files/main/wi
 curl %CURL_PROXY_OPTS% https://raw.githubusercontent.com/rma92/dot-files/main/windows/wbin/gvim_bats/vimdiff.bat --output %CD%\vimdiff.bat
 
 reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\*\Shell\Vim" /ve /t REG_SZ /d "Edit with &Vim" /f
-reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\*\Shell\Vim" /v "Icon" /t REG_SZ /d "%CD%\gvim91p\vim\vim91\gvim.exe" /f
-reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\*\Shell\Vim\command" /ve /t REG_SZ /d "%CD%\gvim91p\vim\vim91\gvim.exe \"%1\"" /f
+reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\*\Shell\Vim" /v "Icon" /t REG_SZ /d "%~dp0gvim91p\vim\vim91\gvim.exe" /f
+reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\*\Shell\Vim\command" /ve /t REG_SZ /d "%~dp0gvim91p\vim\vim91\gvim.exe \"^%%1\"" /f
