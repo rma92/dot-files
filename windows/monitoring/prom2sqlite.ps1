@@ -1,7 +1,7 @@
 Remove-Variable * -ea 0
 $iTimeout = 15
 $szDatabaseName = "promdb.sqlite3"
-$szTargetUrl = "http://localhost:9102"
+$szTargetUrl = "http://localhost:9102/metrics"
 $errorActionPreference = 'stop'
 
 $libName = ('sqlite3', 'winsqlite3.dll')[$env:OS -eq 'Windows_NT']
@@ -95,9 +95,9 @@ while ($true) {
       if( $szLine -and -not $szLine.StartsWith('#')) {
         $iLastSpaceIndex = $szLine.LastIndexOf(' ')
         $szSubstring = $szLine.Substring(0, $iLastSpaceIndex)
-        $bytes = [System.Text.Encoding]::UTF8.GetBytes($substring)
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($szSubstring)
         $szBase64TableName = [System.Convert]::ToBase64String($bytes)
-        $iVal = $line.Substring($iLastSpaceIndex + 1)
+        $iVal = $szLine.Substring($iLastSpaceIndex + 1)
         $szQuery1 = "CREATE TABLE IF NOT EXISTS $szBase64TableName (TIME INTEGER, V INTEGER)"
         $szQuery2 = "INSERT INTO $szBase64TableName (TIME, V) VALUES ($iUTCTIME, $iVal)"
         $dataTable = [sqlite]::execute($db, $szQuery1)
