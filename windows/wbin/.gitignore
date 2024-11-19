@@ -36,6 +36,9 @@ plink.exe
 procexp.exe
 procexp64.exe
 proj.db
+prometheus.exe
+prometheus.yml
+promtool.exe
 pscp.exe
 pterm.exe
 putty.exe
@@ -70,5 +73,6 @@ sqlite-tools-win-x64-3450300.zip
 sqlite3.exe
 sqlite3_analyzer.exe
 tcping.exe
+telegraf.exe
 unzip.exe
 wget.exe
