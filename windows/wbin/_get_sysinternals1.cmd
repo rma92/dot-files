@@ -7,3 +7,5 @@ curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/Autoruns.exe" --output 
 curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/Procmon.exe" --output Procmon.exe
 curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/Procmon64.exe" --output Procmon64.exe
 curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/RDCMan.exe" --output RDCMan.exe
+REM curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/PsExec.exe" --output PsExec.exe
+REM curl %CURL_PROXY_OPTS% -L "https://live.sysinternals.com/PsExec64.exe" --output PsExec64.exe
