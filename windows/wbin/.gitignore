@@ -76,3 +76,7 @@ tcping.exe
 telegraf.exe
 unzip.exe
 wget.exe
+gvim.bat
+gvimdiff.bat
+vim.bat
+vimdiff.bat
