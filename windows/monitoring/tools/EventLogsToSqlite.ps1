@@ -1,10 +1,10 @@
 <#
-  Converts event logs to Sqlite - Standalone that only preloads everything into Powershell
+  Converts event logs to Sqlite
 #>
 $startTime = (Get-Date).AddSeconds(-86400)
 $endTime = (Get-Date)
   
-$szDatabaseName = "db" +[int][Math]::Floor((Get-Date $endTime.ToUniversalTime() -UFormat %s)) + ".db"
+$szDatabaseName = "db" + [int][Math]::Floor((Get-Date $endTime.ToUniversalTime() -UFormat %s)) + ".db"
 
 function Get-Events {
   param (
@@ -113,105 +113,104 @@ public static class Sqlite {
 }
 "@
 
-$db = [IntPtr]::Zero
-$iResult = [sqlite]::open($szDatabaseName, [ref]$db)
-if( $iResult -eq 0 )
-{
-  [sqlite]::execute($db, "PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA journal_mode=OFF;PRAGMA temp_store=OFF;")
-  [sqlite]::execute($db, @"
-  CREATE TABLE IF NOT EXISTS events (
-      xid INTEGER PRIMARY KEY AUTOINCREMENT,
-      Message TEXT,
-      Id INTEGER,
-      Version INTEGER,
-      Level INTEGER,
-      Task INTEGER,
-      Opcode INTEGER,
-      RecordId INTEGER,
-      ProviderName TEXT,
-      ProviderId TEXT,
-      LogName TEXT,
-      ProcessId INTEGER,
-      ThreadId INTEGER,
-      MachineName TEXT,
-      UserId TEXT,
-      OpcodeDisplayName TEXT
-  );
-"@
+function Add-EventsToDatabase {
+  param (
+      [Parameter(Mandatory=$true)]
+      [string]$DatabaseName,
+
+      [Parameter(Mandatory=$true)]
+      [string]$LogName,
+
+      [Parameter(Mandatory=$false)]
+      [string]$Source,
+
+      [Parameter(Mandatory=$true)]
+      [datetime]$startTime,
+
+      [Parameter(Mandatory=$false)]
+      [datetime]$endTime
   )
 
-  Get-Events -LogName "System" -StartTime $startTime | ForEach-Object {
-    # Construct the INSERT statement for each event
-    $query = @"
-INSERT INTO events (
-    Message, 
-    Id,
-    Version, 
-    Level,
-    Task, 
-    Opcode, 
-    RecordId, 
-    ProviderName, 
-    ProviderId, 
-    LogName, 
-    ProcessId, 
-    ThreadId, 
-    MachineName, 
-    UserId
-) VALUES (
-    '$($_.Message.Replace("'", "''"))', 
-    $($_.Id), 
-    $($_.Version), 
-    $($_.Level), 
-    $($_.Task), 
-    $($_.Opcode), 
-    $($_.RecordId), 
-    '$($_.ProviderName.Replace("'", "''"))', 
-    '$($_.ProviderId)', 
-    '$($_.LogName.Replace("'", "''"))', 
-    $($_.ProcessId), 
-    $($_.ThreadId), 
-    '$($_.MachineName.Replace("'", "''"))', 
-    '$($_.UserId)'
+  $dbx = [IntPtr]::Zero
+  $iResult = [sqlite]::open($DatabaseName, [ref]$dbx)
+  if( $iResult -eq 0 )
+  {
+    [sqlite]::execute($dbx, "PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA journal_mode=OFF;PRAGMA temp_store=OFF;")
+    [sqlite]::execute($dbx, @"
+    CREATE TABLE IF NOT EXISTS events (
+        xid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Date INTEGER,
+        Message TEXT,
+        Id INTEGER,
+        Version INTEGER,
+        Level INTEGER,
+        Task INTEGER,
+        Opcode INTEGER,
+        RecordId INTEGER,
+        ProviderName TEXT,
+        ProviderId TEXT,
+        LogName TEXT,
+        ProcessId INTEGER,
+        ThreadId INTEGER,
+        MachineName TEXT,
+        UserId TEXT
+    );
+"@
+    )
+
+    Get-Events -LogName $LogName -StartTime $startTime | ForEach-Object {
+      # Construct the INSERT statement for each event
+      $szMessage = if ($_.Message) { $_.Message.Replace("'", "''") } else { "" }
+      $iDate = [int][Math]::Floor((Get-Date $_.TimeCreated.ToUniversalTime() -UFormat %s))
+      $query = @"
+  INSERT INTO events (
+      Date,
+      Message, 
+      Id,
+      Version, 
+      Level,
+      Task, 
+      Opcode, 
+      RecordId, 
+      ProviderName, 
+      ProviderId, 
+      LogName, 
+      ProcessId, 
+      ThreadId, 
+      MachineName, 
+      UserId
+  ) VALUES (
+      $($iDate),
+      '$($szMessage)', 
+      $($_.Id), 
+      $($_.Version), 
+      $($_.Level), 
+      $($_.Task), 
+      $($_.Opcode), 
+      $($_.RecordId), 
+      '$($_.ProviderName.Replace("'", "''"))', 
+      '$($_.ProviderId)', 
+      '$($_.LogName.Replace("'", "''"))', 
+      $($_.ProcessId), 
+      $($_.ThreadId), 
+      '$($_.MachineName.Replace("'", "''"))', 
+      '$($_.UserId)'
 );
 "@
     # Execute the query using the SQLite library
-    [Sqlite]::Execute($db, $query)
+      [sqlite]::Execute($dbx, $query)
+    } #Get-Events ForEach
+  [sqlite]::close($dbx)
+  } #if iResult -eq 0
+  else
+  {
+    Write-Host "failed to open sqlite database ($DatabaseName)"
   }
+} #Add-EventsToDatabase
 
-  [sqlite]::close($db)
-}
 
-<#
-#>
-#Get-Events -LogName "System" -StartTime $startTime | ft
-
-<#
-$sysFilter = @{
-  StartTime = $startTime
-  EndTime = $endTime
-  LogName = "System"
-}
-$sysEvents = Get-WinEvent -FilterHashTable $sysFilter -ErrorAction SilentlyContinue
-
-$appFilter = @{
-  StartTime = $startTime
-  EndTime = $endTime
-  LogName = "Application"
-}
-$appEvents = Get-WinEvent -FilterHashTable $appFilter -ErrorAction SilentlyContinue
-
-$securityFilter = @{
-  StartTime = $startTime
-  EndTime = $endTime
-  LogName = "Security"
-}
-$securityEvents = Get-WinEvent -FilterHashTable $securityFilter -ErrorAction SilentlyContinue
-
-$sysmonFilter = @{
-  StartTime = $startTime
-  EndTime = $endTime
-  LogName = "Microsoft-Windows-Sysmon/Operational"
-}
-$sysmonEvents = Get-WinEvent -FilterHashTable $sysmonFilter -ErrorAction SilentlyContinue
-#>
+  Add-EventsToDatabase -DatabaseName $szDatabaseName -LogName "System" -StartTime $startTime
+  Add-EventsToDatabase -DatabaseName $szDatabaseName -LogName "Application" -StartTime $startTime
+  Add-EventsToDatabase -DatabaseName $szDatabaseName -LogName "Security" -StartTime $startTime
+#Add-EventsToDatabase -DatabaseName $szDatabaseName -LogName "Microsoft-Windows-Sysmon/Operational" -StartTime $startTime
+#Get-WinEvent 
