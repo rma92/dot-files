@@ -19,6 +19,7 @@ $securityFilter = @{
   StartTime = $startTime
   EndTime = $endTime
   LogName = "Security"
+  ID = 4264, 4265, 4728, 4732, 4756, 1102, 4740, 4663
 }
 $securityEvents = Get-WinEvent -FilterHashTable $securityFilter -ErrorAction SilentlyContinue
 
