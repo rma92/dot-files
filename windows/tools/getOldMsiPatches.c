@@ -2,7 +2,7 @@
 #include <string.h>
 #include <windows.h>
 //tcc getOldMsiPatches.c -ladvapi32 -run
-int verbose = 3;
+int verbose = 0;
 void ReconstructProductCode(char *strMungedCode, char *strProductCode) {
   int arrSequence[] = {8, 7, 6, 5, 4, 3, 2, 1, 12, 11, 10, 9, 16, 15, 14, 13, 18, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31};
   int intArraySize = 32;
@@ -114,6 +114,7 @@ void GetOldPatches(BOOL bForce) {
 
 int main() {
   GetOldPatches(0);
+  printf("Patches that require force remove:\n");
   GetOldPatches(1);
   return 0;
 }
