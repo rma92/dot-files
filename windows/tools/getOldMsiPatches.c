@@ -1,7 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
-//tcc getOldMsiPatches.c -ladvapi32 -run
+/*
+Program to audit superseded patches in Windows Installer, and produce a script to uninstall them.  It is useful for shrinking %SYSTEMROOT%\Installer after many MSI Microsoft Office patches.  It works well with MSI Micrsofot Office patches.
+
+In some cases, the latest patch will need to be reinstalled after uninstalling the old patches - this doesn't seem to be needed with Microsoft products.
+
+Only patches installed by Windows Installer 3.0 or later can be removed this way.  Patches for Adobe products are problematic.  This is similar to the functionality in Dism++ to remove old MSI packages, although this uses msiexec to remove the patches cleanly.
+
+Warning: Some AV vendors (including Microsoft) don't like the output executable from compiling with Tiny C Compiler - Microsoft's Machine Learning flags it.
+
+Usage - run with Tiny C Compiler (use the correct bitness for your system):
+tcc getOldMsiPatches.c -ladvapi32 -run
+
+Usage - compile it with TCC and run:
+tcc getOldMsiPatches.c -ladvapi32 -o
+
+
+\local\tcc32\tcc getOldMsiPatches.c -ladvapi32 -o getOldMsiPatches32.exe
+\local\tcc64\tcc getOldMsiPatches.c -ladvapi32 -o getOldMsiPatches64.exe
+getOldMsiPatches32 > cleanup.cmd
+*/
+
 int verbose = 0;
 void ReconstructProductCode(char *strMungedCode, char *strProductCode) {
   int arrSequence[] = {8, 7, 6, 5, 4, 3, 2, 1, 12, 11, 10, 9, 16, 15, 14, 13, 18, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31};
@@ -88,33 +108,34 @@ void GetOldPatches(BOOL bForce) {
             }
             else
             {
-              if(verbose > 2) printf("#Failed to open individual patch key");
+              if(verbose > 2) printf("REM #Failed to open individual patch key");
             }
           }
           RegCloseKey(hPatchesKey);
         }
         else
         {
-          if(verbose > 2) printf("#Failed to open patches key");
+          if(verbose > 2) printf("REM #Failed to open patches key");
         }
         RegCloseKey(hProductKey);
       }
       else
       {
-        if(verbose > 2) printf("#Failed to open Product key");
+        if(verbose > 2) printf("REM #Failed to open Product key");
       }
     }//for loop
     RegCloseKey(hKey);
   }
   else
   {
-    if(verbose > 2) printf("#Failed to open Installer key");
+    if(verbose > 2) printf("REM #Failed to open Installer key");
   }
 }
 
 int main() {
+  printf("REM #Patches that can be cleaned by MSI:\n");
   GetOldPatches(0);
-  printf("Patches that require force remove:\n");
+  printf("REM #Patches that require force remove:\n");
   GetOldPatches(1);
   return 0;
 }
