@@ -35,7 +35,7 @@ void GetOldPatches(BOOL bForce) {
       char szProductKeyInstallProperties[4096];
       ReconstructProductCode(productKey, productU);
       sprintf(szProductKeyInstallProperties, "%s\\InstallProperties", productKey);
-      printf("ProductKey2 = %s\n", szProductKeyInstallProperties);
+      if(verbose > 3) printf("ProductKey2 = %s\n", szProductKeyInstallProperties);
       if (RegOpenKeyEx(hKey, szProductKeyInstallProperties, 0, KEY_READ, &hProductKey) == ERROR_SUCCESS) {
         char szProductKeyPatches[4096];
 
@@ -66,19 +66,19 @@ void GetOldPatches(BOOL bForce) {
               if (sta == 2) {
                 if (msi3 == 1) {
                   if (uninsta == 1) {
-                    printf("#%s\n", patchKey);
-                    printf("#%s : %s\n", productN, patchN);
+                    printf("REM #%s\n", patchKey);
+                    printf("REM #%s : %s\n", productN, patchN);
                     printf("msiexec /package %s /uninstall %s /passive /qr /norestart\n", productU, patchU);
                   }
                   else if(bForce)
                   {
-                    printf("#%s : %s\n", productN, patchN);
-                    printf("#reg add \"%s\" /v Uninstallable /t REG_DWORD /d 1 /f\n", patchKey);
+                    printf("REM #%s : %s\n", productN, patchN);
+                    printf("REM #reg add \"%s\" /v Uninstallable /t REG_DWORD /d 1 /f\n", patchKey);
                     printf("msiexec /package %s /uninstall %s /passive /qr /norestart\n", productU, patchU);
                   }
                   else
                   {
-                    printf("#cannot uninstall %s : %s - marked as not uninstallable.  Use force.\n", productN, patchN);
+                    printf("REM #cannot uninstall %s : %s - marked as not uninstallable.  Use force.\n", productN, patchN);
                   }
                 } else {
                   printf("Cannot uninstall %s : %s — Patch removal is available starting with MSI 3.0\n", productN, patchN);
