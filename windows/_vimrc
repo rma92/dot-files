@@ -39,7 +39,7 @@ if has('gui_running')
   elseif has('gui_win32')
     set guifont=Consolas:h22:cDEFAULT
     "set guifont=Bloomberg\ Fixed\ Unicode\ N:h20:cDEFAULT
-    set guifont=TextMode92:h20:cDEFAULT
+    set guifont=TextMode92:h12:cDEFAULT
     "set guifont=Hack:h14:cDEFAULT
     "set guifont=Bloomberg\ Fixed\ Unicode\ K:h14:cDEFAULT  
   else
