@@ -15,7 +15,7 @@
 0.0.0.0 a.rad.msn.com
 0.0.0.0 ac3.msn.com
 0.0.0.0 account.live.com
-0.0.0.0 account.microsoft.com
+#0.0.0.0 account.microsoft.com
 0.0.0.0 activity.microsoft.com
 0.0.0.0 ad.doubleclick.net
 0.0.0.0 adnexus.net
@@ -99,7 +99,7 @@
 0.0.0.0 g.msn.com
 0.0.0.0 global.bing.com
 0.0.0.0 go.microsoft.com
-0.0.0.0 graph.microsoft.com
+#0.0.0.0 graph.microsoft.com
 0.0.0.0 h1.msn.com
 0.0.0.0 i1.services.social.microsoft.com
 0.0.0.0 i1.services.social.microsoft.com.nsatc.net
@@ -131,8 +131,8 @@
 0.0.0.0 nw-umwatson.events.data.microsoft.com
 0.0.0.0 oca.telemetry.microsoft.com
 0.0.0.0 oca.telemetry.microsoft.com.nsatc.net
-0.0.0.0 officeapps.live.com
-0.0.0.0 outlook.live.com
+#0.0.0.0 officeapps.live.com
+#0.0.0.0 outlook.live.com
 0.0.0.0 paymentinstruments.mp.microsoft.com
 0.0.0.0 petrol.office.microsoft.com
 0.0.0.0 pptsgs.officeapps.live.com
@@ -174,7 +174,7 @@
 0.0.0.0 statsfe1.ws.microsoft.com
 0.0.0.0 statsfe2.update.microsoft.com.akadns.net
 0.0.0.0 statsfe2.ws.microsoft.com
-0.0.0.0 support.microsoft.com
+#0.0.0.0 support.microsoft.com
 0.0.0.0 survey.watson.microsoft.com
 0.0.0.0 telecommand.telemetry.microsoft.com
 0.0.0.0 telecommand.telemetry.microsoft.com.nsatc.net
@@ -187,7 +187,7 @@
 0.0.0.0 v10.vortex-win.data.microsoft.com
 0.0.0.0 vcservice.webxtsvc.microsoft.com
 0.0.0.0 view.atdmt.com
-0.0.0.0 view.officeapps.live.com
+#0.0.0.0 view.officeapps.live.com
 0.0.0.0 vortex-bn2.metron.live.com.nsatc.net
 0.0.0.0 vortex-cy2.metron.live.com.nsatc.net
 0.0.0.0 vortex-sandbox.data.microsoft.com
