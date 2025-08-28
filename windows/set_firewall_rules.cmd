@@ -44,8 +44,9 @@ netsh advfirewall firewall set rule name="Desktop App Web Viewer" new enable=yes
 REM netsh advfirewall firewall set rule name="Connected User Experiences and Telemetry" new enable=yes
 
 REM Allow User Applications
-netsh advfirewall firewall add rule name="Allow" dir=out action=allow program="" enable=yes
+REM netsh advfirewall firewall add rule name="Allow" dir=out action=allow program="" enable=yes
 netsh advfirewall firewall add rule name="Allow MSTSC" dir=out action=allow program="%SYSTEMROOT%\system32\mstsc.exe" enable=yes
+netsh advfirewall firewall add rule name="Allow nslookup" dir=out action=allow program="%SYSTEMROOT%\system32\nslookup.exe" enable=yes
 netsh advfirewall firewall add rule name="Allow Filezilla" dir=out action=allow program="C:\local\FileZillaPortable\App\Filezilla64\Filezilla.exe" enable=yes
 netsh advfirewall firewall add rule name="Allow Firefox" dir=out action=allow program="C:\local\FirefoxPortable\App\Firefox64\firefox.exe" enable=yes
 netsh advfirewall firewall add rule name="Allow FirefoxNoProxy" dir=out action=allow program="C:\local\FirefoxPortable-Noproxy\App\Firefox64\firefox.exe" enable=yes
@@ -56,6 +57,8 @@ netsh advfirewall firewall add rule name="Allow Citrix wfica" dir=out action=all
 netsh advfirewall firewall add rule name="Allow Citrix wfcrun" dir=out action=allow program="C:\local\ICA Client 10\wfcrun32.exe" enable=yes
 netsh advfirewall firewall add rule name="Allow Softether VPN Manager" dir=out action=allow program="C:\Program Files\SoftEther VPN Server Manager\vpnsmgr_x64.exe" enable=yes
 netsh advfirewall firewall add rule name="Allow PHP Server" dir=in action=allow program="C:\local\php843\php.exe" enable=yes
+netsh advfirewall firewall add rule name="Allow Steam" dir=in action=allow program="C:\Program Files (x86)\Steam\Steam.exe" enable=yes
+netsh advfirewall firewall add rule name="Allow Steam Webhelper" dir=in action=allow program="C:\Program Files (x86)\Steam\bin\cef\cef.win7x64\steamwebhelper.exe" enable=yes
 
 REM Allow wbin
 setlocal
