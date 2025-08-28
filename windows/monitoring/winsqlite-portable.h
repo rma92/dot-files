@@ -3,7 +3,8 @@
 
 #include <windows.h>
 #include <stdint.h>
-
+//Header file to use Windows System Sqlite from C programs
+//
 // Define function pointers for the SQLite functions
 typedef int (*sqlite3_open16_t)(const wchar_t* filename, void** db);
 typedef int (*sqlite3_prepare16_t)(void* db, const wchar_t* query, int len, void** stmt, void* dummy);

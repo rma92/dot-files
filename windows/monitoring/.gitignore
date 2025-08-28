@@ -1,0 +1,5 @@
+promdb.sqlite3
+database.db
+sqlite-test.exe
+test_winsqlite.exe
+telegraf.conf

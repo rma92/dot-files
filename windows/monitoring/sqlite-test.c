@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include "winsqlite-portable.h"
+/*
+Note this can also be used with sqlite.h from the Sqlite website.
 
+Compile with TCC 9.27
+\local\tcc32\tcc -o test_winsqlite.exe sqlite-test.c -L. -lwinsqlite3
+
+(NOT WORKING) Create a winsqlite3 def and compile with TCC 9.25
+\local\tcc925\tiny_impdef.exe C:\Windows\SysWOW64\winsqlite3.dll
+\local\tcc925\tcc.exe -o sqlite-test-win.exe  -lwinsqlite3 sqlite-test.c
+
+
+ */
 int create_types_table() {
     const wchar_t *db_filename = L"database.db";
     const wchar_t *create_table_query = 

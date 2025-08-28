@@ -12,7 +12,11 @@ Element > Font Info (Ctrl+Shift+F)
 * Font Info
 * OS/2 Tab (left)
 * Panose Tab
-* Spacing > Monospaced
+* Spacing / Proportion > Monospaced
+* Change the name on the main page of Font Info to avoid confusion.
+
+## Scale wide characters (W, w, M, m) and narrow characters (I, i, J, j, 1)
+Try X 70% from the wide ones and X 130% from the narrow ones.
 
 ## Other shortcuts
 Ctrl+\ = Transform
