@@ -73,8 +73,8 @@ $unblockCmd = 'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start
 $removeCmd  = 'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell -ArgumentList ''-NoProfile -ExecutionPolicy Bypass -File \"\"' + $removeScript  + '\"\" \"%1\"'' -Verb RunAs"'
 
 # --- Registry paths (EXE-only context menu) ---
-$baseUnblock = 'Registry::HKEY_CLASSES_ROOT\exefile\shell\Unblock in Firewall'
-$baseRemove  = 'Registry::HKEY_CLASSES_ROOT\exefile\shell\Remove from Firewall'
+$baseUnblock = 'Registry::HKEY_CLASSES_ROOT\exefile\shell\WF Out Unblock'
+$baseRemove  = 'Registry::HKEY_CLASSES_ROOT\exefile\shell\WF Out Unblock Remove'
 
 # Create keys and the 'command' subkeys explicitly (idempotent)
 New-Item -Path $baseUnblock -Force | Out-Null
