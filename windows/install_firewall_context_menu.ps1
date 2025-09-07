@@ -1,4 +1,6 @@
 # Install-FirewallContextMenus.ps1 (elevated)
+# powershell -NoProfile -ExecutionPolicy Bypass -File install_firewall_context_menu.ps1
+
 
 # --- Paths ---
 $sys32 = Join-Path $env:WINDIR 'System32'
