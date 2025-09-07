@@ -83,9 +83,9 @@ New-Item -Path $baseRemove  -Force | Out-Null
 New-Item -Path (Join-Path $baseRemove 'command') -Force | Out-Null
 
 # Set labels/icons
-Set-ItemProperty -Path $baseUnblock -Name '(Default)' -Value 'Windows Firewall - Unblock'
+Set-ItemProperty -Path $baseUnblock -Name '(Default)' -Value 'WinFirewall Out - Unblock'
 Set-ItemProperty -Path $baseUnblock -Name 'Icon'       -Value 'imageres.dll,-109' -Type String
-Set-ItemProperty -Path $baseRemove  -Name '(Default)' -Value 'Windows Firewall - Remove Unblock'
+Set-ItemProperty -Path $baseRemove  -Name '(Default)' -Value 'WinFirewall Out - Remove Unblock'
 Set-ItemProperty -Path $baseRemove  -Name 'Icon'       -Value 'imageres.dll,-101' -Type String
 
 # Set the command strings as the (Default) value of the command subkeys
