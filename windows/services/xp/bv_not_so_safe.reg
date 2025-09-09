@@ -1,0 +1,127 @@
+Windows Registry Editor Version 5.00
+;"NOT-SO-SAFE" to DISABLE
+
+;[START] Black Viper POWER USER Config (Disabled Startup) ((Excludes those Above))
+
+;Automatic Updates
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wuauserv]
+;"Start"=dword:00000004
+
+;Cryptographic Services
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CryptSvc]
+;"Start"=dword:00000004
+
+;DNS Client
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache]
+;"Start"=dword:00000004
+
+;IPSEC Services
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent]
+;"Start"=dword:00000004
+
+;Protected Storage
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ProtectedStorage]
+;"Start"=dword:00000004
+
+;Security Accounts Manager
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SamSs]
+;"Start"=dword:00000004
+
+;Shell Hardware Detection
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ShellHWDetection]
+;"Start"=dword:00000004
+
+;System Event Notification
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SENS]
+;"Start"=dword:00000004
+
+;Task Scheduler
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Schedule]
+;"Start"=dword:00000004
+
+;Themes
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Themes]
+;"Start"=dword:00000004
+
+;Windows Firewall/Internet Connection Sharing (ICS)
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess]
+;"Start"=dword:00000004
+
+;Application Layer Gateway Service
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ALG]
+;"Start"=dword:00000004
+
+;Background Intelligent Transfer Service
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BITS]
+;"Start"=dword:00000004
+
+;COM+ Event System
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventSystem]
+;"Start"=dword:00000004
+
+;COM+ System Application
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\COMSysApp]
+;"Start"=dword:00000004
+
+;Distributed Transaction Coordinator
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MSDTC]
+;"Start"=dword:00000004
+
+;Fast User Switching Compatibility
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\FastUserSwitchingCompatibility]
+;"Start"=dword:00000004
+
+;HTTP SSL
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HTTPFilter]
+;"Start"=dword:00000004
+
+;IMAPI CD-Burning COM Service
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ImapiService]
+;"Start"=dword:00000004
+
+;Logical Disk Manager Administrative Service
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\dmadmin]
+;"Start"=dword:00000004
+
+;MS Software Shadow Copy Provider
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SwPrv]
+;"Start"=dword:00000004
+
+;Remote Access Auto Connection Manager
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasAuto]
+;"Start"=dword:00000004
+
+;Remote Access Connection Manager
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasMan]
+;"Start"=dword:00000004
+
+;Removable Storage
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NtmsSvc]
+;"Start"=dword:00000004
+
+;Telephony
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TapiSrv]
+;"Start"=dword:00000004
+
+;Terminal Services
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TermService]
+;"Start"=dword:00000004
+
+;Volume Shadow Copy
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\VSS]
+;"Start"=dword:00000004
+
+;Windows Image Acquisition (WIA)
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\stisvc]
+;"Start"=dword:00000004
+
+;[END] Black Viper POWER USER Config (Disabled Startup)
+;XP Media Center Edition Specific Services
+
+;Disables Media Center Scheduler Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ehSched]
+"Start"=dword:00000004
+
+;Disables Media Center Receiver Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ehRecvr]
+"Start"=dword:00000004

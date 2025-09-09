@@ -1,0 +1,120 @@
+Windows Registry Editor Version 5.00
+;"SAFE" to DISABLE
+
+;[START] Black Viper SAFE Config (Disabled Startup) 
+
+;Computer Browser
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Browser]
+"Start"=dword:00000004
+
+;Error Reporting Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ERSvc]
+"Start"=dword:00000004
+
+;Secondary Logon
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\seclogon]
+"Start"=dword:00000004
+
+;Server
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lanmanserver]
+"Start"=dword:00000004
+
+;System Restore
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\srservice]
+"Start"=dword:00000004
+
+;TCP/IP NetBIOS Helper
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LmHosts]
+"Start"=dword:00000004
+
+;WebClient
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WebClient]
+"Start"=dword:00000004
+
+;Wireless Zero Configuration
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WZCSVC]
+"Start"=dword:00000004
+
+;Remote Registry
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteRegistry]
+"Start"=dword:00000004
+
+;Security Center
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc]
+"Start"=dword:00000004
+
+;Indexing Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CiSvc]
+"Start"=dword:00000004
+
+;NetMeeting Remote Desktop Sharing
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mnmsrvc]
+"Start"=dword:00000004
+
+;Performance Logs and Alerts
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysmonLog]
+"Start"=dword:00000004
+
+;QoS RSVP
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RSVP]
+"Start"=dword:00000004
+
+;Remote Desktop Help Session Manager
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RDSessMgr]
+"Start"=dword:00000004
+
+;Smart Card
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SCardSvr]
+"Start"=dword:00000004
+
+;SSDP Discovery Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SSDPSRV]
+"Start"=dword:00000004
+
+;UPS (Uninterruptible Power Supply)
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UPS]
+"Start"=dword:00000004
+
+;Universal Plug'n'Play Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost]
+"Start"=dword:00000004
+
+;WMI Performance Adapter
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WmiApSrv]
+"Start"=dword:00000004
+
+;Network Location Awareness (NLA)
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Nla]
+"Start"=dword:00000004
+
+;Net Logon
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon]
+"Start"=dword:00000004
+
+;Portable Media Serial Number Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WmdmPmSN]
+"Start"=dword:00000004
+
+;Network Provisioning Service
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xmlprov]
+"Start"=dword:00000004
+
+;[END] Black Viper SAFE Config (Disabled Startup)
+;"SAFE" to MANUAL
+
+;[START] Black Viper SAFE Config (Manual Startup)
+
+;Disables Distributed Link Tracking Client
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TrkWks]
+"Start"=dword:00000003
+
+;Logical Disk Manager
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\dmserver]
+"Start"=dword:00000003
+
+;Disables Help and Support
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\helpsvc]
+"Start"=dword:00000003
+
+;[END] Black Viper SAFE Config (Manual Startup)
+
