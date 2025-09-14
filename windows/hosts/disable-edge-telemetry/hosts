@@ -77,7 +77,8 @@
 0.0.0.0 edge-staging.microsoft.com
 0.0.0.0 edge-test.microsoft.com
 0.0.0.0 edge.cloudbrowser.microsoft.com
-0.0.0.0 edge.microsoft.com
+#unblocked to allow edge Translator.
+#0.0.0.0 edge.microsoft.com
 0.0.0.0 edgeservices.bing.com
 0.0.0.0 edgeshoppingstatic.azureedge.net
 0.0.0.0 edgesync.microsoft.com
