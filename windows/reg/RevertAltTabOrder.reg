@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+;Restores Windows 10/11 Alt Tab sorting behavior
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
+"AltTabSettings"=-
+
