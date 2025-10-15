@@ -117,16 +117,11 @@ netsh advfirewall firewall add rule name="ConnectifyGopher.exe Outbound" dir=out
 REM Allow all outbound ICMPv4 traffic
 netsh advfirewall firewall add rule name="Allow ICMPv4 Outbound" protocol=icmpv4:8,any dir=out action=allow enable=yes
 
-REM Hyper-V
-# Allow Hyper-V networking services
-REM New-NetFirewallRule -DisplayName "Allow Hyper-V Networking Management Service" -Program "C:\Windows\System32\vmmgmt.exe" -Direction Outbound -Action Allow
-REM New-NetFirewallRule -DisplayName "Allow Hyper-V Host Compute Network Service" -Program "C:\Windows\System32\hns.exe" -Direction Outbound -Action Allow
-REM New-NetFirewallRule -DisplayName "Allow Hyper-V VMMS" -Program "C:\Windows\System32\vmms.exe" -Direction Outbound -Action Allow
+REM allow 43389 port
+netsh advfirewall firewall add rule name="Allow 43389 TCP" dir=in action=allow protocol=TCP localport=43389 profile=any enable=yes
+netsh advfirewall firewall add rule name="Allow 43389 UDP" dir=in action=allow protocol=UDP localport=43389 profile=any enable=yes
 
-# Allow DHCP for VMs
-REM New-NetFirewallRule -DisplayName "Allow DHCP for Hyper-V VMs" -Protocol UDP -LocalPort 67-68 -Direction Inbound -Action Allow
-REM New-NetFirewallRule -DisplayName "Allow DHCP for Hyper-V VMs Outbound" -Protocol UDP -LocalPort 67-68 -Direction Outbound -Action Allow
-:: --- Service-based rule for VMMS (works because service name exists)
+REM Hyper-V
 netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Service Outbound" dir=out service=vmms action=allow enable=yes
 netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Service Inbound" dir=in service=vmms action=allow enable=yes
 
