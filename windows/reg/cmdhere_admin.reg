@@ -1,0 +1,29 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\runas]
+@="Command Prompt (Admin)"
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"Icon"="moricons.dll,0"
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\shell\runas\command]
+@="cmd.exe /s /k pushd \"%V\""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\runas]
+@="Command Prompt (Admin)"
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"Icon"="moricons.dll,0"
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Directory\Background\shell\runas\command]
+@="cmd.exe /s /k pushd \"%V\""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\runas]
+@="Command Prompt (Admin)"
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"Icon"="moricons.dll,0"
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Drive\shell\runas\command]
+@="cmd.exe /s /k pushd \"%V\""
+

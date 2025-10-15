@@ -2,6 +2,8 @@ REM REG IMPORT AddTakeownToContextMenu.reg
 REG IMPORT AddTextMode92XToConsole-user.reg
 REG IMPORT AeroShake-Disable.reg
 REG IMPORT cmdhere.reg
+REG IMPORT cmdhere_admin.reg
+REG IMPORT FixAltTabOrder.reg
 REG IMPORT "Disable Bing Searches.reg"
 REG IMPORT "ExplorerUserSettings.reg"
 REG IMPORT "marino-cmd-powershell-console-TextMode92Xfont.reg"

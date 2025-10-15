@@ -1,5 +1,27 @@
 REM Add command line to process launch event 4688
+REM “Include command line in process creation events” (adds cmdline to 4688): introduced in Windows 8.1 / Server 2012 R2; Microsoft later back-ported to Windows 7 / 8 via KB3004375 (Feb 2015)
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 1 /f
+REM Set “Force subcategory settings to override category settings” via registry
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v SCENoApplyLegacyAuditPolicy /t REG_DWORD /d 1 /f
+
+REM enable process creation
+auditpol /set /subcategory:"Process Creation" /success:enable /failure:disable
+REM enable process terminate
+auditpol /set /subcategory:"Process Termination" /success:enable /failure:disable
+
+REM Logon/Logoff
+auditpol /set /subcategory:"Logon" /success:enable /failure:enable
+auditpol /set /subcategory:"Special Logon" /success:enable
+auditpol /set /subcategory:"Account Lockout" /failure:enable
+REM Object Access
+REM auditpol /set /subcategory:"Removable Storage" /success:enable /failure:enable
+REM auditpol /set /subcategory:"Filtering Platform Connection" /success:enable
+REM Policy Change
+auditpol /set /subcategory:"Audit Policy Change" /success:enable /failure:enable
+auditpol /set /subcategory:"MPSSVC Rule-Level Policy Change" /success:enable
+auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
+ 
+
 
 REM Windows 10 Privacy
 REM Set Windows Analytics to limited enhanced if enhanced is enabled
