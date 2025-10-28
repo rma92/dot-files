@@ -117,6 +117,46 @@ netsh advfirewall firewall add rule name="ConnectifyGopher.exe Outbound" dir=out
 REM Allow all outbound ICMPv4 traffic
 netsh advfirewall firewall add rule name="Allow ICMPv4 Outbound" protocol=icmpv4:8,any dir=out action=allow enable=yes
 
+REM allow 43389 port
+netsh advfirewall firewall add rule name="Allow 43389 TCP" dir=in action=allow protocol=TCP localport=43389 profile=any enable=yes
+netsh advfirewall firewall add rule name="Allow 43389 UDP" dir=in action=allow protocol=UDP localport=43389 profile=any enable=yes
+
+REM Hyper-V
+netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Service Outbound" dir=out service=vmms action=allow enable=yes
+netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Service Inbound" dir=in service=vmms action=allow enable=yes
+
+:: Allow Hyper-V Virtual Machine Management Service (vmms.exe)
+netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Outbound" `
+    dir=out program="C:\Windows\System32\vmms.exe" action=allow enable=yes
+netsh advfirewall firewall add rule name="Allow Hyper-V VMMS Inbound" `
+    dir=in program="C:\Windows\System32\vmms.exe" action=allow enable=yes
+
+:: Allow Hyper-V Networking Management Service (vmmgmt.exe)
+netsh advfirewall firewall add rule name="Allow Hyper-V Networking Management Outbound" `
+    dir=out program="C:\Windows\System32\vmmgmt.exe" action=allow enable=yes
+netsh advfirewall firewall add rule name="Allow Hyper-V Networking Management Inbound" `
+    dir=in program="C:\Windows\System32\vmmgmt.exe" action=allow enable=yes
+
+:: Allow Hyper-V Host Compute Network Service (hns.exe)
+netsh advfirewall firewall add rule name="Allow Hyper-V Host Compute Network Outbound" `
+    dir=out program="C:\Windows\System32\hns.exe" action=allow enable=yes
+netsh advfirewall firewall add rule name="Allow Hyper-V Host Compute Network Inbound" `
+    dir=in program="C:\Windows\System32\hns.exe" action=allow enable=yes
+
+:: Allow DHCP (UDP 67–68) for VM traffic
+netsh advfirewall firewall add rule name="Allow DHCP for Hyper-V VMs Outbound" `
+    dir=out protocol=UDP localport=67-68 action=allow enable=yes
+netsh advfirewall firewall add rule name="Allow DHCP for Hyper-V VMs Inbound" `
+    dir=in protocol=UDP localport=67-68 action=allow enable=yes
+
+echo === Rules added successfully. Restarting Hyper-V services... ===
+
+:: Restart Hyper-V networking services
+net stop vmms >nul 2>&1
+net start vmms >nul 2>&1
+net stop hns >nul 2>&1
+net start hns >nul 2>&1
+
 echo Firewall rules configured successfully.
 REM powershell.exe -Command "New-NetFirewallRule -DisplayName 'Allow All in wbin Folder' -Direction Outbound -Action Allow -Program '%SystemDrive%\local\git-sys\dot-files\windows\wbin\*' -Profile Any"
 REM powershell.exe -Command "New-NetFirewallRule -DisplayName 'Allow Git Core Tools Folder' -Direction Outbound -Action Allow -Program '%ProgramFiles%\Git\mingw64\libexec\git-core\*' -Profile Any"
