@@ -8,7 +8,35 @@ Optional dependencies: imagemagick (only for drawing the grid)
 
 Note that this does not work with KWin or Gnome, but works well with Openbox and xfwm.
 
-## Alpine Setup
+Settings in Xfce4 that should be configured:
+* Window Manager Tweaks > Accessibility > "Automatically tile windows when moving toward the screen edge"
+* Window Manager > Advanced > Window snapping: select none
+* Window Manager > Advanced > Wrap Workspaces when reaching the screen edge: select none
+
+May want to set:
+* Window Manager > Focus > Focus follows mouse
+
+Bugs:
+* on Xfce, the title bar and window borders are not accounted for when tiling the windows into the grid (they overlap for the areas outside the client area)
+
+## Alpine setup (tar.gz amd64)
+extract drawgrid_bin_alpine64.tar.gz to /usr/bin.
+Make deskgrid-invoke autostart:
+```
+mkdir -p /home/user/.config/autostart
+cat > /home/user/.config/autostart/deskgrid-invoke.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/deskgrid-invoke
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Terminal=false
+Name=Deskgrid Invoke
+Comment=Run deskgrid-invoke on login
+EOF
+```
+## Alpine Setup (manual)
 wmctrl is not packaged on alpine.  A copy of source is in wmctrl64.zip in this directory.
 ```
 apk add xdotool xwininfo xprop slop xinput
@@ -63,6 +91,12 @@ lbu add /usr/lib/firefox/ublock_origin.xpi
 lbu add /usr/lib/firefox/mozilla.cfg
 lbu add /usr/lib/firefox/defaults/pref/local-settings.js
 ```
+
+# Make xfce4-terminal not warn on paste (current user)
+```
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/xfce4/terminal/terminalrc"; mkdir -p "$(dirname "$cfg")"; if grep -q '^MiscConfirmPaste=' "$cfg" 2>/dev/null; then sed -i 's/^MiscConfirmPaste=.*/MiscConfirmPaste=false/' "$cfg"; else echo 'MiscConfirmPaste=false' >> "$cfg"; fi
+```
+
 # Install Chicago95 systemwide, disable xfwm compositor
 This is useful for remote desktops.
 
