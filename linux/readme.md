@@ -23,6 +23,8 @@ Bugs:
 extract drawgrid_bin_alpine64.tar.gz to /usr/bin.
 Make deskgrid-invoke autostart:
 ```
+apk add xdotool xwininfo xprop slop xinput
+
 mkdir -p /home/user/.config/autostart
 cat > /home/user/.config/autostart/deskgrid-invoke.desktop << 'EOF'
 [Desktop Entry]
@@ -126,6 +128,11 @@ cat << 'EOF' > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
   <property name="general" type="empty">
     <property name="theme" type="string" value="Chicago95"/>  
     <property name="use_compositing" type="bool" value="false"/>
+    <property name="tile_on_move" type="bool" value="true"/>
+    <property name="snap_to_border" type="bool" value="false"/>
+    <property name="snap_to_windows" type="bool" value="false"/>
+    <property name="wrap_windows" type="bool" value="false"/>
+    <property name="click_to_focus" type="bool" value="false"/>
   </property>
 </channel>
 EOF
