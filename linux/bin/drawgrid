@@ -1,0 +1,59 @@
+#!/bin/bash
+
+CONFIG_FILE="$HOME/.config/superclick.cfg"
+CONFIG_DIR=/tmp/click
+mkdir -p $CONFIG_DIR
+if [ ! -f $CONFIG_FILE ]; then
+cat <<EOF > ${CONFIG_FILE}
+# Gap between windows in pixels (reasonable values: 0 8 16 24)
+gap=0
+# Outer gap (disable if you use WM margins)
+show_outer_gap=true
+# Only for clicksnap (mouse) action
+activate_window=false
+EOF
+fi
+source <(grep = $CONFIG_FILE)
+
+GAP=${gap:-16}
+COLUMNS=${columns:-16}
+ROWS=${rows:-8}
+
+AVAILSIZE=$(wmctrl -d |grep "*"|awk -F' ' '{print $9}')
+AVAIL_X="${AVAILSIZE%x*}"
+AVAIL_Y="${AVAILSIZE#*x}"
+
+TILE_WIDTH="$((AVAIL_X/COLUMNS))"
+TILE_HEIGHT="$((AVAIL_Y/ROWS))"
+
+rectangles=""
+    row="0"
+    for row in $(seq 0 $((ROWS-1)));
+    do
+        for tile in $(seq 0 $((COLUMNS-1)));
+            do 
+            rectangles+="rectangle $((tile*TILE_WIDTH)),$((row*TILE_HEIGHT)) $((tile*TILE_WIDTH+TILE_WIDTH)),$((row*TILE_HEIGHT+TILE_HEIGHT)) ";
+        done
+    done
+name="text 24,96 DesktopGrid"
+case $LANG in
+    pl*)
+    text="text 30,128 \"Ten obrazek ma pomóc ci zaprzyjaźnić się z siatką pulpitu DesktopGrid.\nDesktopGrid pozwala na dokładne ułożenie okien na pulpicie z opcjonalnym (konfigurowalnym) odstępem.\nJak to działa?\n1. Trzymając klawisze CTRL + SHIFT, kliknij wewnątrz okna które chcesz przemieścić. Okno zostanie zminimalizowane.\n2. Wyznacz myszą nową pozycję dla okna zaznaczając prostokąt\n3. Okno jest ustawiane wewnątrz siatki obliczonej na podstawie zaznaczenia.\n\nUżyj paska zadań aby schować/pokazać tło.\nAby wyłączyć tło: klik środkowym myszy na pasku zadań lub kliknięcie na obrazku i klawisz q\n\nSiatka: kolumny:$COLUMNS, wiersze:$ROWS, odstęp:$GAP\nRozmiar pojedyńczej komórki: $TILE_WIDTH x $TILE_HEIGHT\"";;
+    *)
+    text="text 30,128 \"This background image is here to help you get familiar with DesktopGrid.\nDesktopGrid allows you to accurately arrange windows on the desktop with optional gap (configurable).\nHow it's working?\n1. While holding down CTRL+ SHIFT keys, click inside the window you want to move. The window will be minimized.\n2. Use the mouse to mark a new position for the window by selecting the rectangle\n3. The window is positioned within the computed grid from the selection.\n\nCurrent Grid settings: $COLUMNS columns, $ROWS rows, gap:$GAP\nSingle tile size: $TILE_WIDTH x $TILE_HEIGHT\n\nUse mousewheel on taskbar to show/hide this background.\nTo close: middle click on taskbar or click here, then hit q key\""
+    ;;
+esac
+magick -size $AVAILSIZE xc:LavenderBlush3 -stroke LavenderBlush2 -strokewidth 1 \
+   -fill LavenderBlush3 \
+   -draw "$rectangles" \
+   -family 'Noto Sans' -style Normal +stroke -pointsize 14 -fill gray16 -draw "$text" \
+   -style Normal -weight Bold +stroke -pointsize 64 -fill orange3 -draw "$name" \
+   /tmp/grid.png
+feh -N -x -g "$AVAILSIZE" --title "DrawGrid helper" /tmp/grid.png > /dev/null 2>&1 &
+sleep 1
+dghelper=$(wmctrl -l -p |grep "DrawGrid helper")
+
+read -r A B C D< <(echo $dghelper)
+
+wmctrl -i -r "$A" -b add,below
+
