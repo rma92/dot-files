@@ -1,0 +1,259 @@
+#!/bin/bash
+#:   superclick - click on the appropriate area of the window to snap it in a given direction. 
+#:   Works with active and inactive windows.
+#:   Same actions are available for keybindings: topleft, top, topright, left, center, right,
+#:   bottomleft, bottom and bottomright.
+#:   Requirements: X11, xwininfo, xprop, xdotool, wmctrl
+#    Copyright (C) Daniel Napora <danieln@maboxlinux.org> 2021-25
+#    https://maboxlinux.org
+# 
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# TODO: XFCE: Test it on XFCE with Workspace Margins
+# TODO: XFCE: check if possible to bind actions to frame (for mouse clicks)
+
+CONFIG_FILE="$HOME/.config/superclick.cfg"
+mkdir -p $CONFIG_DIR
+if [ ! -f $CONFIG_FILE ]; then
+cat <<EOF > ${CONFIG_FILE}
+# Gap between windows in pixels (reasonable values: 0 8 16 24)
+gap=0
+# Outer gap (disable if you use WM margins)
+show_outer_gap=true
+# Only for mouse action
+activate_window=false
+EOF
+fi
+source <(grep = $CONFIG_FILE)
+GAP=${gap:-16}
+_config() {
+## OUTER GAP
+    [[ "$show_outer_gap" == "true" ]] && OUT_GAP=$((GAP/2)) || OUT_GAP="0" 
+
+    read OFFSET REALSIZE <<< $(wmctrl -d |grep "*" | awk -F' ' '{print $8, $9}')
+    OFF_X="${OFFSET%,*}"
+    OFF_Y="${OFFSET#*,}"
+    
+    AVAIL_X="${REALSIZE%x*}"
+    AVAIL_Y="${REALSIZE#*x}"
+}
+
+_movewin() {
+    while read -r line; do
+    info=$(echo $line | awk '{print $3}')
+    if [[ $info == primary ]]; then
+        info=$(echo $line | awk '{print $4}')
+    fi
+    read M_WIDTH M_HEIGHT M_X_OFF M_Y_OFF <<< $(echo $info | awk -F[x+] '{print $1, $2, $3, $4}')
+    if (( P_X >= M_X_OFF && P_X <= M_WIDTH + M_X_OFF && P_Y >= M_Y_OFF && P_Y <= M_HEIGHT + M_Y_OFF )); then
+        break
+    fi
+done < <(xrandr | grep " connected")
+	### This may be calculated probably from `wmctrl -d` (?)
+	if [[ "$XDG_SESSION_DESKTOP" == "openbox" ]];then
+    # Openbox calculate with margin right and bottom
+   	m_right=$(obxml sel /a:openbox_config/a:margins/a:right)
+	m_bottom=$(obxml sel /a:openbox_config/a:margins/a:bottom)
+    AVAIL_X=$((M_WIDTH-OFF_X-m_right))
+    AVAIL_Y=$((M_HEIGHT-OFF_Y-m_bottom))
+    else
+    AVAIL_X=$((M_WIDTH-OFF_X))
+    AVAIL_Y=$((M_HEIGHT-OFF_Y))
+    fi
+    
+    WIDTH_FULL=$((AVAIL_X-OUT_GAP*2-BORDERCOMP_X))
+    WIDTH_HALF=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X))
+    WIDTH_SMALL=$((AVAIL_X/3-OUT_GAP-GAP/2-BORDERCOMP_X))
+    WIDTH_WIDE=$((WIDTH_SMALL*2+GAP+BORDERCOMP_X))
+    HEIGHT_FULL=$((AVAIL_Y-OUT_GAP*2-BORDERCOMP_Y))
+    HEIGHT_HALF=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2))
+    
+case $POS_CODE in
+    00|"topleft") # top-left
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+OFF_Y+OUT_GAP));
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))" && "$HEIGHT" -eq "$((HEIGHT_HALF+BORDERCOMP_Y))" ]] && W=$WIDTH_SMALL
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$WIDTH_HALF+BORDERCOMP_X" && "$HEIGHT" -eq "$((HEIGHT_HALF+BORDERCOMP_Y))" ]] && W=$WIDTH_WIDE
+    
+    ;;
+    10|top) # top
+    W=$WIDTH_FULL H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+0+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+0+OFF_Y+OUT_GAP))
+    [[ "$X" -eq "$XPOS" && "$WIDTH" -eq "$WIDTH_FULL+$BORDERCOMP_X" ]] && W=$WIDTH_SMALL XPOS=$((M_X_OFF+OFF_X+AVAIL_X/2-WIDTH_SMALL/2-BORDERCOMP_X/2))
+    ;;
+    20|topright) # top-right
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+AVAIL_X/2+OFF_X+GAP/2)) YPOS=$((M_Y_OFF+OFF_Y+OUT_GAP))
+   
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))" && "$HEIGHT" -eq "$((HEIGHT_HALF+BORDERCOMP_Y))" ]] && W="$WIDTH_SMALL" XPOS=$((M_X_OFF+OFF_X+AVAIL_X-WIDTH_SMALL-OUT_GAP-BORDERCOMP_X))
+    [[ "$X" -eq "$((M_X_OFF+AVAIL_X-WIDTH_SMALL+OFF_X-OUT_GAP-BORDERCOMP_X))" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$((WIDTH_HALF+BORDERCOMP_X))" && "$HEIGHT" -eq "$((HEIGHT_HALF+BORDERCOMP_Y))" ]] && W=$WIDTH_WIDE XPOS=$((M_X_OFF+AVAIL_X-WIDTH_WIDE+OFF_X-OUT_GAP-BORDERCOMP_X))
+    ;;
+    01|left) # left
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y-BORDERCOMP_Y-OUT_GAP*2)) XPOS=$((M_X_OFF+0+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+0+OFF_Y+OUT_GAP))
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))" && "$HEIGHT" -eq "$((HEIGHT_FULL+BORDERCOMP_Y))" ]] && W=$WIDTH_SMALL
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$WIDTH_HALF+BORDERCOMP_X" && "$HEIGHT" -eq "$((HEIGHT_FULL+BORDERCOMP_Y))" ]] && W=$WIDTH_WIDE;;
+    11|center) # center
+    HEIGHT_SMALL=$((AVAIL_Y/3-OUT_GAP-GAP/2-BORDERCOMP_Y))
+    W=$WIDTH_FULL H=$HEIGHT_FULL XPOS=$((M_X_OFF+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+OFF_Y+OUT_GAP))
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$WIDTH_FULL+BORDERCOMP_X" ]] && W=$WIDTH_SMALL XPOS=$((M_X_OFF+OFF_X+AVAIL_X/2-WIDTH_SMALL/2-BORDERCOMP_X/2))
+    [[ "$X" -eq "$((M_X_OFF+OFF_X+AVAIL_X/2-WIDTH_SMALL/2-BORDERCOMP_X/2))" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((WIDTH_SMALL+BORDERCOMP_X))" ]] && W=$((AVAIL_X/10*8)) H=$((AVAIL_Y/10*8)) XPOS=$((M_X_OFF+AVAIL_X/10)) YPOS=$((M_Y_OFF+AVAIL_Y/10))
+    ;;
+    21|right) # right
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y-BORDERCOMP_Y-OUT_GAP*2)) XPOS=$((M_X_OFF+AVAIL_X/2+OFF_X+GAP/2)) YPOS=$((M_Y_OFF+0+OFF_Y+OUT_GAP))
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))"  && "$HEIGHT" -eq "$((HEIGHT_FULL+BORDERCOMP_Y))" ]] && W="$WIDTH_SMALL" XPOS=$((M_X_OFF+OFF_X+AVAIL_X-WIDTH_SMALL-OUT_GAP-BORDERCOMP_X))
+    [[ "$X" -eq "$((M_X_OFF+AVAIL_X-WIDTH_SMALL+OFF_X-OUT_GAP-BORDERCOMP_X))" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$((WIDTH_HALF+BORDERCOMP_X))"  && "$HEIGHT" -eq "$((HEIGHT_FULL+BORDERCOMP_Y))" ]] && W=$WIDTH_WIDE XPOS=$((M_X_OFF+AVAIL_X-WIDTH_WIDE+OFF_X-OUT_GAP-BORDERCOMP_X))
+    ;;
+    02|bottomleft) # bottom-left
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+0+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+AVAIL_Y/2+OFF_Y+GAP/2))
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))" ]] && W=$WIDTH_SMALL
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$WIDTH_HALF+BORDERCOMP_X" ]] && W=$WIDTH_WIDE
+    ;;
+    12|bottom) # bottom
+    W=$WIDTH_FULL H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+0+OFF_X+OUT_GAP)) YPOS=$((M_Y_OFF+AVAIL_Y/2+OFF_Y+GAP/2))
+    [[ "$X" -eq "$XPOS" && "$WIDTH" -eq "$WIDTH_FULL+$BORDERCOMP_X" ]] && W=$WIDTH_SMALL XPOS=$((M_X_OFF+OFF_X+AVAIL_X/2-WIDTH_SMALL/2-BORDERCOMP_X/2))
+    ;;
+    22|bottomright) # bottom-right
+    W=$((AVAIL_X/2-OUT_GAP-GAP/2-BORDERCOMP_X)) H=$((AVAIL_Y/2-BORDERCOMP_Y-OUT_GAP-GAP/2)) XPOS=$((M_X_OFF+AVAIL_X/2+OFF_X+GAP/2)) YPOS=$((M_Y_OFF+AVAIL_Y/2+OFF_Y+GAP/2))
+    [[ "$X" -eq "$XPOS" && "$Y" -eq "$YPOS" && "$WIDTH" -eq "$((W+BORDERCOMP_X))" ]] && W="$WIDTH_SMALL" XPOS=$((M_X_OFF+OFF_X+AVAIL_X-WIDTH_SMALL-OUT_GAP-BORDERCOMP_X))
+    [[ "$X" -eq "$((M_X_OFF+AVAIL_X-WIDTH_SMALL+OFF_X-OUT_GAP-BORDERCOMP_X))" && "$Y" -eq "$YPOS" && "$WIDTH" -lt "$((WIDTH_HALF+BORDERCOMP_X))" ]] && W=$WIDTH_WIDE XPOS=$((M_X_OFF+AVAIL_X-WIDTH_WIDE+OFF_X-OUT_GAP-BORDERCOMP_X));;&
+esac
+xdotool windowsize $WINDOW $W $H 
+xdotool windowmove $WINDOW $XPOS $YPOS
+
+if [ $activate_window == "true" ]; then xdotool windowactivate $WINDOW; fi
+#_debug
+}
+_getwin() { #get active window (only when invoked by keyboard)
+    _config
+    WIN=$(xdotool getactivewindow)
+    HEX_ID=$(printf '0x%x\n' $WIN)
+    wmctrl -i -r $HEX_ID -b remove,maximized_vert,maximized_horz
+ 
+    WINDOW=$(xwininfo -id $(xdotool getactivewindow) -int -tree | awk '/^ *Parent/ {print $4}')
+    winFRAME=$(xprop -id $WIN _NET_FRAME_EXTENTS | awk ' {gsub(/,/,"");print $3,$4,$5,$6}')
+    read BORDER_L BORDER_R BORDER_T BORDER_B <<< "$winFRAME"
+
+    BORDERCOMP_X=$((BORDER_L+BORDER_R))
+    BORDERCOMP_Y=$((BORDER_T+BORDER_B))
+    eval $(xdotool getwindowgeometry --shell $WINDOW)
+    
+    #CLICK_POINT - here it is active window position
+    P_X="$X"
+    P_Y="$Y"
+    _movewin 
+}
+
+clicksnap() {
+    _config
+    ### Clicksnap mouse action start
+    eval $(xdotool getmouselocation --shell)
+    Mouse_x="$X"
+    Mouse_y="$Y"
+
+    HEX_ID=$(printf '0x%x\n' $WINDOW)
+    wmctrl -i -r $HEX_ID -b remove,maximized_vert,maximized_horz
+    CHILD_ID=$(xwininfo -id $HEX_ID -children|grep "\"" | awk '{print $1}')
+    if xwininfo -id $CHILD_ID -wm |grep 'Dock\|Desktop' ; then exit 0 ;fi # Ignore Dock eg. tint2
+
+    eval $(xdotool getwindowgeometry --shell $WINDOW)
+    Win_x="$X"
+    Win_y="$Y"
+    Win_width="$WIDTH"
+    Win_height="$HEIGHT"
+    
+    if [[ $Mouse_x -gt $Win_x  && $Mouse_x -lt $((Win_x+WIDTH)) && $Mouse_y -gt $Win_y && $Mouse_y -lt $((Win_y+HEIGHT)) ]];then
+    pos_x="$(((Mouse_x-Win_x)/(Win_width/3)))"
+    pos_y="$(((Mouse_y-Win_y)/(Win_height/3)))"
+    POS_CODE="$pos_x$pos_y"
+    else
+    pos_x="$((Mouse_x*3/AVAIL_X))"
+    pos_y="$((Mouse_y*3/AVAIL_Y))"
+    POS_CODE="$pos_x$pos_y"
+    fi
+
+    CHILD=$(printf %i $CHILD_ID)
+    read BORDER_L BORDER_R BORDER_T BORDER_B <<< "$(xprop -id $CHILD _NET_FRAME_EXTENTS | awk ' {gsub(/,/,"");print $3,$4,$5,$6}')"
+
+    BORDERCOMP_X=$((BORDER_L+BORDER_R))
+    BORDERCOMP_Y=$((BORDER_T+BORDER_B))
+    
+    #CLICK_POINT
+    P_X="$Mouse_x"
+    P_Y="$Mouse_y"
+    
+    _movewin
+}
+
+moveto() {
+    POS_CODE="$1"
+    _getwin 
+    
+}
+_debug() {
+cat <<EOF > "$HOME/.config/superclick_debug"
+Clickpoint ${P_X} ${P_Y}
+Available area: $AVAIL_X $AVAIL_Y  Monitor W,H and OFFSET $M_WIDTH x $M_HEIGHT $M_X_OFF $M_Y_OFF
+EOF
+}
+trainer(){
+case "$LANG" in
+	pl*)
+	TITLE="Trener SuperClick"
+	MOUSE="przytrzymaj klawisz <kbd>super</kbd> i kliknij w wybrany obszar okna<br /><br /><em>...kolejne kliknięcia zmieniają rozmiar</em><br /><br /><a href='run://jgdeskgrid -s'><button type='button'> Konfiguruj ...</button></a><a href='run://viewnior /usr/share/mabox/img/superclick-keyboard.gif'><button type='button'> Demo (z klawiatury) </button></a>"
+	KEYB="<em>z klawiatury: Super + KP_1..9</em>"
+	;;
+	*)
+	TITLE="SuperClick trainer"
+	MOUSE="hold <kbd>Super</kbd> key and click in appropriate area<br />of any window<br /><br /><em>...subsequent clicks change the size</em><br /><br /><a href='run://jgdeskgrid -s'><button type='button'> Config Menu ...</button></a><a href='run://viewnior /usr/share/mabox/img/superclick-keyboard.gif'><button type='button'> Keyboard Demo</button></a>"
+	KEYB="<em>with keyboard: Super + KP_1..9</em>"
+	;;
+esac
+	
+HTML_FILE=$(mktemp /tmp/superclickXXXXX)
+
+cat <<EOF > ${HTML_FILE}
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style>
+body{padding:0;margin:0;-webkit-user-select: none;}
+#grid {display: grid;grid-template-columns: auto auto auto;gap: 1px;background-color: #113344;padding: 1px;height:100vh;}
+#grid > div {background-color: rgba(255, 255, 255, 0.8);color: #113344;text-align: center;font-size: 16vh;line-height: 33vh;transition:0.3s;}
+#grid > div.txt {text-align: center;position:relative;}
+#grid > div.txt p {position:absolute;top:0;left:0;font-size: 2.8vh;line-height: 3.2vh;width:100%;color: #222222;}
+#grid > div.txt:hover p {color: #EEEEEE;}
+#grid > div:hover {background-color: #113344;color: yellow;}
+</style></head>
+<body><div id="grid">
+  <div>&nwarr;</div>
+  <div>&uarr;</div>
+  <div>&nearr;</div>  
+  <div>&larr;</div>
+  <div class="txt"><p>${MOUSE}</p></div>
+  <div>&rarr;</div>
+  <div>&swarr;</div>
+  <div class="txt"><p>${KEYB}</p>&darr;</div>
+  <div>&searr;</div> 
+</div></body></html>
+EOF
+yhtml "${HTML_FILE}" "${TITLE}"
+}
+usage() {
+    grep "^#:" $0 | while read DOC; do printf '%s\n' "${DOC###:}"; done
+    exit
+}
+
+case "$1" in
+    "") clicksnap ;;
+    topleft|top|topright|left|center|right|bottomleft|bottom|bottomright) moveto "$1" ;;
+    trainer) trainer;;
+    -h|--help) usage ;;
+esac

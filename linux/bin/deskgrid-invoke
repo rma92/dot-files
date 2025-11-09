@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Listen to xinput test-xi2 output for device 2 on root window.
+# When both left (1) and right (3) buttons are held down, run /usr/bin/deskgrid.
+
+xinput test-xi2 --root 2 | awk '
+/RawButtonPress|ButtonPress/ { etype = "press" }
+ /RawButtonRelease|ButtonRelease/ { etype = "release" }
+
+$1 == "detail:" {
+    button = $2
+
+    if (button == 1) {
+        left = (etype == "press") ? 1 : 0
+    } else if (button == 3) {
+        right = (etype == "press") ? 1 : 0
+    }
+
+    if (left && right && !triggered) {
+        system("/usr/bin/deskgrid &")
+        triggered = 1
+    }
+
+    if (!left || !right) {
+        triggered = 0
+    }
+}
+'
