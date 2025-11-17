@@ -1,61 +1,132 @@
 #!/bin/bash
-### deskgrid - click on the window and select area to place it on the grid
-#   Works with active and inactive windows
-#   (C) Daniel Napora <napcok@gmail.com>, 2021-24
-#   https://maboxlinux.org
-# 
+# deskgrid - click window, draw a rectangle, and snap it to a grid
+# Adapted for more robust grid math and configurable screen paddings.
+#
+# Requirements: xdotool, wmctrl, xprop, xwininfo, slop
+#
+# Config file: $HOME/.config/deskgrid.cfg
+# Supported keys (with defaults):
+#   gap=0
+#   show_outer_gap=true
+#   activate_window=false
+#   top_padding=0
+#   bottom_padding=0
+#   left_padding=0
+#   right_padding=0
+#   columns=4
+#   rows=4
+#
+# Padding is extra excluded space INSIDE the workarea reported by wmctrl.
+# For example, if xfce4-panel on top is 32px high, set top_padding=32.
+# Works well with XFCE4WM with the following settings
+# Window Manager Tweaks:
+#   Automatically tile windows when moving toward the screen edge (Disable)
+#   Use edge resistance instead of window snapping (Disable)
+#   Placement: set it to large
+# Window Manager:
+#   Advanced:
+#     Window snapping: Uncheck All
+#     Wrap workspaces...: Uncheck All 
+set -e
 
+CONFIG_FILE="${CONFIG_FILE:-$HOME/.config/deskgrid.cfg}"
 
-CONFIG_FILE="$HOME/.config/superclick.cfg"
-if [ ! -f $CONFIG_FILE ]; then
-cat <<EOF > ${CONFIG_FILE}
-# Gap between windows in pixels (reasonable values: 0 8 16 24)
+# Create a default config if missing
+if [ ! -f "$CONFIG_FILE" ]; then
+    mkdir -p "$(dirname "$CONFIG_FILE")"
+    cat <<EOF > "$CONFIG_FILE"
+# deskgrid configuration
+
+# Gap between windows in pixels
 gap=0
-# Outer gap (disable if you use WM margins)
+
+# Show outer gap at edges (true/false)
 show_outer_gap=true
-# Only for clicksnap (mouse) action
+
+# Activate the clicked window before resizing (true/false)
 activate_window=false
+
+# Additional paddings (pixels) inside the workarea
+# Use these to exclude panels or docks that aren't accounted for by the WM.
+top_padding=0
+bottom_padding=0
+left_padding=0
+right_padding=0
+
+# Grid dimensions
+columns=4
+rows=4
 EOF
 fi
-source <(grep = $CONFIG_FILE)
 
-GAP=${gap:-16}
-COLUMNS=${columns:-16}
-ROWS=${rows:-8}
-#TITLEBAR_HEIGHT=${titlebar_height:-18}
+# Load config (only simple VAR=VAL lines)
+# shellcheck disable=SC1090
+source <(grep -E '^[a-zA-Z0-9_]+=' "$CONFIG_FILE")
 
-case "$LANG" in
-    pl*)
-    TITLE1="DesktopGrid"
-    TEXT1="\n\nNarysuj myszą prostokąt na pulpicie aby ustalić nową pozycję i rozmiar dla okna.\nPodczas rysowania możesz wcisnąć Spację aby przesuwać zaznaczenie.\n"
-    DRAWGRID="Pokaż obrazek pomocniczy jako tło"
-    DISABLE_NOTIFICATIONS="Wyłącz podpowiedzi"
-    ;;
-    *)
-    TITLE1="DesktopGrid"
-    TEXT1="\nDraw rectangle by mouse to set new window positon and size.\nWhile drawing you may hold Space key to move selection.\nNew window will be bigger than selection."
-    DRAWGRID="Show helper image as background"
-    DISABLE_NOTIFICATIONS="Disable this hint"
-    ;;
-esac
+# Defaults if missing
+GAP=${gap:-0}
+SHOW_OUTER_GAP=${show_outer_gap:-true}
+ACTIVATE_WINDOW=${activate_window:-false}
+TOP_PADDING=${top_padding:-0}
+BOTTOM_PADDING=${bottom_padding:-0}
+LEFT_PADDING=${left_padding:-0}
+RIGHT_PADDING=${right_padding:-0}
+GRID_COLUMNS=${columns:-4}
+GRID_ROWS=${rows:-4}
 
-eval $(xdotool getmouselocation --shell)
-# we have window id now as $WINDOW
-HEX_ID=$(printf '0x%x\n' $WINDOW)
-CHILD_ID=$(xwininfo -id $HEX_ID -children|grep "\"" | awk '{print $1}')
-if xwininfo -id $CHILD_ID -wm |grep Dock ; then exit 0 ;fi # Ignore Dock eg. tint2
+# Helper: get frame extents for a window (left right top bottom)
+get_frame_extents() {
+    local win="$1"
+    local prop
+    prop=$(xprop -id "$win" _NET_FRAME_EXTENTS 2>/dev/null || true)
+    if echo "$prop" | grep -q "_NET_FRAME_EXTENTS(CARDINAL)"; then
+        # Format: _NET_FRAME_EXTENTS(CARDINAL) = L, R, T, B
+        echo "$prop" | awk -F' = ' '{print $2}' | tr -d ',' 
+        return 0
+    fi
+    return 1
+}
 
-CHILD=$(printf %i $CHILD_ID)
-read BORDER_L BORDER_R BORDER_T BORDER_B <<< "$(xprop -id $CHILD _NET_FRAME_EXTENTS | awk ' {gsub(/,/,"");print $3,$4,$5,$6}')"
-    BORDERCOMP_X=$((BORDER_L+BORDER_R))
-    BORDERCOMP_Y=$((BORDER_T+BORDER_B))
+### 1. Get window under mouse
+eval "$(xdotool getmouselocation --shell)"   # sets X, Y, SCREEN, WINDOW
 
+# Optionally activate the window first
+if [ "$ACTIVATE_WINDOW" = "true" ]; then
+    xdotool windowactivate --sync "$WINDOW"
+fi
 
-xdotool windowminimize --sync $WINDOW
-# Screen dimensions, margins and available size
-SCREENSIZE=$(wmctrl -d |grep "*" | awk -F' ' '{print $4}')
-MARGINS=$(wmctrl -d |grep "*" | awk -F' ' '{print $8}')
-AVAILSIZE=$(wmctrl -d |grep "*" | awk -F' ' '{print $9}')
+# Ignore docks (panels, tint2, etc.)
+WINDOW_HEX=$(printf '0x%x\n' "$WINDOW")
+WM_TYPE=$(xprop -id "$WINDOW_HEX" _NET_WM_WINDOW_TYPE 2>/dev/null || true)
+if echo "$WM_TYPE" | grep -qi "DOCK"; then
+    exit 0
+fi
+
+# Determine frame extents
+BORDER_L=0; BORDER_R=0; BORDER_T=0; BORDER_B=0
+
+if EXTENTS=$(get_frame_extents "$WINDOW_HEX"); then
+    read BORDER_L BORDER_R BORDER_T BORDER_B <<<"$EXTENTS"
+else
+    # Try the first child as a fallback
+    CHILD_ID=$(xwininfo -id "$WINDOW_HEX" -children 2>/dev/null | awk '/"[^"]+"/ {print $1; exit}')
+    if [ -n "$CHILD_ID" ] && EXTENTS=$(get_frame_extents "$CHILD_ID"); then
+        read BORDER_L BORDER_R BORDER_T BORDER_B <<<"$EXTENTS"
+    fi
+fi
+BORDERCOMP_X=$((BORDER_L + BORDER_R))
+BORDERCOMP_Y=$((BORDER_T + BORDER_B))
+
+### 2. Minimize window while we capture selection
+xdotool windowminimize --sync "$WINDOW"
+
+### 3. Workarea and margins from wmctrl
+# Example wmctrl -d line:
+# 0  * DG: 1920x1080  VP: 0,0  WA: 0,27 1920x1053  N/A
+LINE=$(wmctrl -d | awk '/\*/ {print}')
+SCREENSIZE=$(echo "$LINE" | awk '{print $4}')  # DG: WIDTHxHEIGHT
+MARGINS=$(echo "$LINE" | awk '{print $8}')     # WA: X,Y
+AVAILSIZE=$(echo "$LINE" | awk '{print $9}')   # AVAIL_WxAVAIL_H
 
 SCREEN_X="${SCREENSIZE%x*}"
 SCREEN_Y="${SCREENSIZE#*x}"
@@ -64,35 +135,107 @@ AVAIL_Y="${AVAILSIZE#*x}"
 MARGIN_X="${MARGINS%,*}"
 MARGIN_Y="${MARGINS#*,}"
 
-#Show notify
-if [ $notifications = true ]; then
-notify-send.sh -t 20000 --icon=mbcc "$TITLE1" "$TEXT1" -o "$DRAWGRID:drawgrid" -o "$DISABLE_NOTIFICATIONS:mb-setvar notifications=false $CONFIG_FILE"
+# Define the grid area:
+# Start at the workarea origin plus user paddings
+GRID_X=$((MARGIN_X + LEFT_PADDING))
+GRID_Y=$((MARGIN_Y + TOP_PADDING))
+GRID_W=$((AVAIL_X - LEFT_PADDING - RIGHT_PADDING))
+GRID_H=$((AVAIL_Y - TOP_PADDING - BOTTOM_PADDING))
+echo "GRID: x: ${GRID_X} y: ${GRID_Y} w: ${GRID_W} h: ${GRID_H} COL: ${GRID_COLUMNS} ROW: ${GRID_ROWS}"
+if (( GRID_W <= 0 || GRID_H <= 0 )); then
+    # Misconfigured paddings
+    echo "deskgrid: Invalid grid area (check paddings in $CONFIG_FILE)" >&2
+    exit 1
 fi
 
-# Take selection
-slop=$(slop --highlight -b 3 --tolerance=0 --color=0.3,0.4,0.6,0.4 -f "%x %y %w %h") || exit 1
-read -r X Y W H < <(echo $slop)
+### 4. Take selection with slop
+slop_out=$(slop --highlight -b 3 --tolerance=0 --color=0.3,0.4,0.6,0.4 -f "%x %y %w %h") || exit 1
+read -r X Y W H <<<"$slop_out"
 
-start_x="$(((X-MARGIN_X)/(AVAIL_X/COLUMNS)))"
-start_y="$(((Y-MARGIN_Y)/(AVAIL_Y/ROWS)))"
-end_x="$(((X-MARGIN_X+W)/(AVAIL_X/COLUMNS)))"
-end_y="$(((Y-MARGIN_Y+H)/(AVAIL_Y/ROWS)))"
+# Relative to grid origin
+relX=$((X - GRID_X))
+relY=$((Y - GRID_Y))
 
-### Outer gap factor
-if [[ $show_outer_gap = true ]]; then GF="1" ; else GF="0" ; fi
+# Clamp selection to grid bounds (avoid negative divisions)
+if (( relX < 0 )); then relX=0; fi
+if (( relY < 0 )); then relY=0; fi
 
-### SIZE and POS calculation
-if [[ $start_x = "0" ]]; then GAP_X="$((GAP*GF))" ; else GAP_X=$((GAP/2)) ; fi
-if [[ $start_y = "0" ]]; then GAP_Y="$((GAP*GF))" ; else GAP_Y=$((GAP/2)) ; fi
+# 5. Grid cell sizes
+CELL_W=$(( GRID_W / GRID_COLUMNS ))
+CELL_H=$(( GRID_H / GRID_ROWS ))
+echo "CELL_W: ${CELL_W} CELL_H: ${CELL_H}"
 
-if [[ $end_x = $((COLUMNS-1)) ]]; then GAP_X_END="$((GAP/2))" ; else GAP_X_END=$((GAP/2)) ; fi
-if [[ $end_y = $((ROWS-1)) ]]; then GAP_Y_END="$((GAP/2))" ; else GAP_Y_END=$((GAP/2)) ; fi
+# Avoid divide-by-zero
+if (( CELL_W <= 0 || CELL_H <= 0 )); then
+    echo "deskgrid: Cell size is zero (grid too fine for screen size)" >&2
+    exit 1
+fi
 
-SIZE="$(((end_x-start_x+1)*(AVAIL_X/COLUMNS)-GAP_X/2-GAP_X_END-BORDERCOMP_X)) $(((end_y-start_y+1)*(AVAIL_Y/ROWS)-GAP_Y/2-GAP_Y_END-BORDERCOMP_Y))"
+# Remainders for bottom/right anchoring
+REM_W=$(( GRID_W - CELL_W * GRID_COLUMNS ))
+REM_H=$(( GRID_H - CELL_H * GRID_ROWS ))
 
-POSITION="$((start_x*AVAIL_X/COLUMNS+GAP_X/2+MARGIN_X)) $((start_y*AVAIL_Y/ROWS+GAP_Y/2+MARGIN_Y))"
+# 6. Map selection to grid coordinates (inclusive end indices)
+start_x=$(( relX / CELL_W ))
+start_y=$(( relY / CELL_H ))
+end_x=$(( (relX + W - 1) / CELL_W ))
+end_y=$(( (relY + H - 1) / CELL_H ))
 
-xdotool windowsize $WINDOW $SIZE
-xdotool windowmove $WINDOW $POSITION
-xdotool windowmap $WINDOW
+# Clamp to valid grid indices
+(( start_x < 0 )) && start_x=0
+(( start_y < 0 )) && start_y=0
+(( end_x >= GRID_COLUMNS )) && end_x=$(( GRID_COLUMNS - 1 ))
+(( end_y >= GRID_ROWS )) && end_y=$(( GRID_ROWS - 1 ))
+
+### 7. Outer gap factor
+if [[ "$SHOW_OUTER_GAP" = true ]]; then
+    GF=1
+else
+    GF=0
+fi
+
+# Gap before and after the window in each direction
+if (( start_x == 0 )); then GAP_X=$((GAP * GF)); else GAP_X=$((GAP / 2)); fi
+if (( start_y == 0 )); then GAP_Y=$((GAP * GF)); else GAP_Y=$((GAP / 2)); fi
+
+GAP_X_END=$((GAP / 2))
+GAP_Y_END=$((GAP / 2))
+
+### 8. Compute size
+# Base width/height from cell count
+CELL_COUNT_X=$(( end_x - start_x + 1 ))
+CELL_COUNT_Y=$(( end_y - start_y + 1 ))
+
+SIZE_W=$(( CELL_COUNT_X * CELL_W ))
+SIZE_H=$(( CELL_COUNT_Y * CELL_H ))
+
+# If the selection touches the last column/row, eat the remainders
+# so the grid hugs the right/bottom edge as closely as possible.
+if (( end_x == GRID_COLUMNS - 1 )); then
+    SIZE_W=$(( SIZE_W + REM_W ))
+fi
+if (( end_y == ROWS - 1 )); then
+    SIZE_H=$(( SIZE_H + REM_H ))
+fi
+
+# Subtract gaps and frame extents
+SIZE_W=$(( SIZE_W - GAP_X / 2 - GAP_X_END - BORDERCOMP_X ))
+SIZE_H=$(( SIZE_H - GAP_Y / 2 - GAP_Y_END - BORDERCOMP_Y ))
+
+# Ensure sizes are positive
+(( SIZE_W < 1 )) && SIZE_W=1
+(( SIZE_H < 1 )) && SIZE_H=1
+
+### 9. Compute position (top-left of frame)
+POS_X=$(( GRID_X + start_x * CELL_W + GAP_X / 2 ))
+POS_Y=$(( GRID_Y + start_y * CELL_H + GAP_Y / 2 ))
+echo "x: ${POS_X} y: ${POS_Y} w: ${SIZE_W} h: ${SIZE_H}"
+
+### 10. Apply size and position
+xdotool windowsize "$WINDOW" "$SIZE_W" "$SIZE_H"
+xdotool windowmove "$WINDOW" "$POS_X" "$POS_Y"
+xdotool windowmap "$WINDOW"
+xdotool windowactivate "$WINDOW" >/dev/null 2>&1 || true
+
+exit 0
 
