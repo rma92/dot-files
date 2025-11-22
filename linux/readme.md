@@ -17,6 +17,12 @@ Run in this directory (`linux`) in the dot-files repo:
 cp -r .vim ~/
 cp .vimrc ~/
 ```
+# Fix hissing noise on Devuan and Arch on some laptops
+```
+sudo apt update
+sudo apt install alsa-tools
+sudo hda-verb /dev/snd/hwC0D0 0x1d SET_PIN_WIDGET_CONTROL 0x0
+```
 # Deskgrid
 This is deskgrid from Mabox-Linux.
 Dependencies: xdotool, xwininfo, xprop, slop, xinput, wmctrl
