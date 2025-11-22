@@ -1,6 +1,22 @@
 # Linux Config
 Contains themes, and config files, and window management tools.
 
+# Fonts
+(All users/root) Run in this directory (`linux`) in the dot-files repo:
+```
+cp ../fonts/*.ttf /usr/share/fonts/truetype/
+```
+(Current user)
+```
+mkdir -p ~/.local/share/fonts/truetype
+cp ../fonts/*.ttf ~/.local/share/fonts/truetype/
+```
+# Vim
+Run in this directory (`linux`) in the dot-files repo:
+```
+cp -r .vim ~/
+cp .vimrc ~/
+```
 # Deskgrid
 This is deskgrid from Mabox-Linux.
 Dependencies: xdotool, xwininfo, xprop, slop, xinput, wmctrl
@@ -19,6 +35,38 @@ May want to set:
 Bugs:
 * on Xfce, the title bar and window borders are not accounted for when tiling the windows into the grid (they overlap for the areas outside the client area)
 
+Copy to `/usr/bin` (as root):
+```
+# Devuan 6, Debian 13, Ubuntu 24.04
+# doas apt install xdotool slop xinput wmctrl
+# Alpine - compile wmctrl if architecture is not AMD64
+# apk add xdotool xwininfo xprop slop xinput
+# cp bin_alpine64/wmctrl /usr/bin
+# cd bin
+cp deskgrid /usr/bin
+cp deskgrid-invoke /usr/bin
+cp drawgrid /usr/bin
+cp superclick /usr/bin
+chmod +x /usr/bin/deskgrid
+chmod +x /usr/bin/deskgrid-invoke
+chmod +x /usr/bin/drawgrid
+chmod +x /usr/bin/superclick
+```
+Add to current user autostart:
+```
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/deskgrid-invoke.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/deskgrid-invoke
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Terminal=false
+Name=Deskgrid Invoke
+Comment=Run deskgrid-invoke on login
+EOF
+```
 ## Alpine setup (tar.gz amd64)
 extract drawgrid_bin_alpine64.tar.gz to /usr/bin.
 Make deskgrid-invoke autostart:
