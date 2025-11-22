@@ -2,6 +2,7 @@
 
 # Listen to xinput test-xi2 output for device 2 on root window.
 # When both left (1) and right (3) buttons are held down, run /usr/bin/deskgrid.
+# This doesn't work on some Debian distros (e.g. Ubuntu 24.04, but it works on 22.04).
 
 xinput test-xi2 --root 2 | awk '
 /RawButtonPress|ButtonPress/ { etype = "press" }
