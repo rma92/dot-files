@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Run deskgrid when both left (1) and right (3) buttons are held.
+
+# Make xinput line-buffered so we get events immediately.
+stdbuf -oL xinput test-xi2 --root 2 | \
+while read -r line; do
+    case "$line" in
+        *RawButtonPress*|*ButtonPress*)
+            etype=press
+            # echo "etype=press $line"
+            ;;
+        *RawButtonRelease*|*ButtonRelease*)
+            etype=release
+            # echo "etype=release $line"
+            ;;
+        *detail:*)
+            # line looks like: "    detail: 1"
+            set -- $line          # $1=detail: $2=1
+            button=$2
+
+            if [ "$button" -eq 1 ]; then
+                [ "$etype" = press ] && left=1 || left=0
+            elif [ "$button" -eq 3 ]; then
+                [ "$etype" = press ] && right=1 || right=0
+            fi
+
+            # defaults if never set
+            : "${left:=0}" "${right:=0}" "${triggered:=0}"
+
+            # echo "button=$button etype=$etype left=$left right=$right trig=$triggered"
+
+            if [ "$left" -eq 1 ] && [ "$right" -eq 1 ] && [ "$triggered" -eq 0 ]; then
+                deskgrid &
+                triggered=1
+            fi
+
+            if [ "$left" -eq 0 ] || [ "$right" -eq 0 ]; then
+                triggered=0
+            fi
+            ;;
+    esac
+done
