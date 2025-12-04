@@ -66,7 +66,8 @@
 0.0.0.0 config.edge.skype.com
 0.0.0.0 corp.sts.microsoft.com
 0.0.0.0 corpext.msitadfs.glbdns2.microsoft.com
-0.0.0.0 crl.microsoft.com
+#unblocked to allow crl
+#0.0.0.0 crl.microsoft.com
 0.0.0.0 cs1.wpc.v0cdn.net
 0.0.0.0 customervoice.microsoft.com
 0.0.0.0 db3aqu.atdmt.com
