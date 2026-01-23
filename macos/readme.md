@@ -1,6 +1,21 @@
 # MacOS Setup
 * Set up Mac with a local account, add iCloud after, or create if at a new workplace.  (The work iCloud account can be added to a Family Share with your personal account to access paid for apps, content and subscriptions.)
 
+# Git settings (clone this repository)
+* open Terminal.
+* run `git` to install xcode cli
+* make sure github cli tool is installed using brew.
+```
+cd ~
+mkdir -s $HOME/git-sys
+cd $HOME/git-sys
+git clone https://github.com/rma92/dot-files
+ln -s $HOME/git-sys/dot-files/linux/.vimrc $HOME/.vimrc
+ln -s $HOME/git-sys/dot-files/linux/.vim $HOME/.vim
+```
+* `gh auth login` (note only one account can be signed in at once)
+* TODO: Since the macOS config files are plists, perhaps they can be turned into code that can be pasted into Terminal to simplify setting this up.
+
 ## System Preferences
 * Keyboard
   * Adjust keyboard brightness in low light: off
@@ -171,7 +186,6 @@ Close the shell and open a new one so the profile is updated with the brew confi
 ```
 # Private OSS + Browsers
 brew install --cask xquartz
-brew install --cask alt-tab
 brew install macvim
 brew install --cask librewolf
 brew install --cask firefox@esr
@@ -183,8 +197,13 @@ brew install --cask stats
 brew install awscli
 brew install python@3.14
 brew install --cask dimentium/autoraise/autoraiseapp
-brew install --cask hammerspoon
 brew install --cask github
+brew install --cask windows-app
+
+brew install --cask hammerspoon
+brew install --cask bettertouchtool
+brew install --cask moom
+brew install --cask alt-tab
 
 #brew install --cask utm
 #brew install --cask virtualbox
@@ -202,7 +221,9 @@ brew install --cask 1password-cli
 
 # Private commercial
 brew install --cask microsoft-office-businesspro
-brew install --cask vmware-fusion
+# brew install --cask vmware-fusion
+# VMWare Fusion cask doesn't work, download it manually.
+
 ```
 
 Macvim:
@@ -233,18 +254,6 @@ media.autoplay.default -> 0
 Extensions:
 * Ublock Origin: ublockorigin.com > Install, Allow in private windows.
 * Dark Reader: [https://addons.mozilla.org/en-US/firefox/addon/darkreader/]
-* 
-
-# Git settings
-* run git to install xcode cli
-* make sure github cli tool is installed using brew.
-```
-mkdir -s $HOME/git-sys
-cd $HOME/git-sys
-git clone https://github.com/rma92/dot-files
-ln -s $HOME/git-sys/dot-files/linux/.vimrc $HOME/.vimrc
-```
-* `gh auth login` (note only one account can be signed in at once)
 
 # Chrome
 * Install Ublock Origin.
