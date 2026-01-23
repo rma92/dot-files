@@ -128,6 +128,14 @@ Drag the Applications folder to the Dock to make a Stack.
 * Add a shortcut with no modifier for the **"Home"** key, paste `\033[H` into the box (you can't press home, it won't work."
 * Add a shortcut with no modifier for the **"End"** key, paste `\033[F` into the box (you can't press home, it won't work."
 
+## Fonts
+* Profiles > BAsic (or other profile) > Text.
+* Font: TextMode92X 14
+* Set Text color to: #F39F41 / 243 159 65
+* Set background to black / #000000 / 0 0 0
+* Set bold text color and cursor color to: #80A0FF / 128 160 255
+* Blink cursor
+
 ## Right-click Paste: BetterTouchTool
 * open BetterTouchTool
 * Add Terminal.app (click the left-most + at the bottom, either browse to it or if it's running, use the running apps menu)
@@ -157,7 +165,8 @@ Turn off Focus Status in the main channel so things like Slack don't say you're 
 Close the shell and open a new one so the profile is updated with the brew config.
 
 # Third party tools
-* xquartz
+* Homebrew (see above)
+* xquartz (installed using brew)
 * https://github.com/sbmpost/AutoRaise (note this is included in private OSS)
 ```
 # Private OSS + Browsers
@@ -207,7 +216,8 @@ set noimd
 set visualbell
 set ttyfast
 ```
-## Firefox
+
+# Firefox
 * Open Firefox, Keep in Dock, set as Default, do not import from previous brwoser.
 about:config:
 ```
@@ -215,36 +225,42 @@ browser.newtabpage.activity-stream.discoverystream.sendToPocket.enabled -> false
 extensions.pocket.showHome -> false
 media.autoplay.default -> 0
 ```
-New Tab - Settings:
-* Disable shortcuts
-* Disable Recommended Stories
-New Tab - Weather: Switch to Celsius
+* New Tab - Settings:
+  * Disable shortcuts
+  * Disable Recommended Stories
+* New Tab - Weather: Switch to Celsius
 
-ublockorigin.com > Install, Allow in private windows.
+Extensions:
+* Ublock Origin: ublockorigin.com > Install, Allow in private windows.
+* Dark Reader: [https://addons.mozilla.org/en-US/firefox/addon/darkreader/]
+* 
 
 # Git settings
 * run git to install xcode cli
-* make sure github cli tool is installed using brew (
+* make sure github cli tool is installed using brew.
 ```
 mkdir -s $HOME/git-sys
 cd $HOME/git-sys
 git clone https://github.com/rma92/dot-files
 ln -s $HOME/git-sys/dot-files/linux/.vimrc $HOME/.vimrc
 ```
+* `gh auth login` (note only one account can be signed in at once)
+
+# Chrome
+* Install Ublock Origin.
 
 # AltTab
-* Exclude RDP (TODO)
+* Exclude RDP - it may need to be added manually.  Use the menu bar icon for AltTab > Settings > Blacklist > click the +, navigate to the "Windows" app.  Set it to Always (since Cmd+Tab can be used to get away from RDP)
+* Polices > Updates policy: "Don't check for updates periodically"
 
 # AutoRaise
-* No configuration required, just make sure that it's enabled.
-TODO: Change it not to raise, only focus a window.  Requires: compile with EXPERIMENTAL_FOCUS_FIRST, and this config file:
-```
-# ~/.config/AutoRaise/config
-pollMillis=50
-delay=0
-focusDelay=0
-```
-* TODO: AutoStart
+* Open the app.
+* Right-click the balloons icon in the menu bar
+  * Window raise: Drag all the way to the left to disable.
+  * Window focus: 50 ms
+  * Enable on launch
+[https://www.zdnet.com/article/this-quick-mac-tip-saves-me-time-and-clicks-all-day-long/]
+
 # Moom
 Grid > Set a hot key for the grid - Control+Shift+Command+G.
 
@@ -314,15 +330,36 @@ mouseWatcher:start()
 hs.alert.show("Left+Right click → Moom Grid (clean)")
 ```
 
-# RDP Client
-Add a custom resolution that corresponds to the size of a title bar * 2 + menu bar removed from the vertical height to prevent annoyances accessing the top of the remote computer.
+# RDP Client / "Windows app"
+* Add a custom resolution that corresponds to the size of a title bar * 2 + menu bar removed from the vertical height to prevent annoyances accessing the top of the remote computer.
+* It may be nicer to just run the RDP session in a window roughly the size of the monitor.
+  * Create a custom resolution a little bit smaller than the monitor with a title bar, menu bar, and dock - e.g. 1078x1800 for a vertical 1080p monitor - 1080x1920.  Set it not to be in full screen, once the session is connected, uncheck Window > Fit to Window to avoid scaling.
 
-# Linux in VMWare
-The scaling requires Wayland / Gnome on armhf.  Just install xrdp.
+# Linux in VMWare or Parallels
+* The scaling in VMWare or VirtualBox using `open-vm-tools` requires Wayland / Gnome on armhf.  Just install xrdp.
+* Parallels Tools supports scaling with XFCE / X11 on current versions of Debian.
+* Using xrdp allows further flexibility in what OS/VM/Remote system is being used.
+
 TODO: Make an AMD64 chroot to run the production version of Chrome for buggy apps.
 
 # Fonts
 Copy the fonts from the font directory in this repository to `~/Library/Fonts` (or `/Library/Fonts` to install for all users).
 
-# Third party tooling
-* yabai: see ChatGPT convo for commands (TODO) (Note this can be replaced with Moom + AutoRaise)
+# Auto-login items
+System Preferences > General > Login Items & Extensions
+* Hammerspoon (should add itself)
+* BetterTouchTool
+* Moom
+* AutoRaise
+
+# Dock Items
+* Finder
+* Terminal
+* Firefox
+* Chrome
+* HotQR Generator
+* HotQR Reader
+* VMWare
+* 1Password / KeePassium
+
+Add a stack for Applications
