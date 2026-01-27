@@ -196,6 +196,8 @@ brew install zenity
 brew install --cask stats
 brew install awscli
 brew install python@3.14
+brew install tcptraceroute
+brew install --cask keepingyouawake
 brew install --cask dimentium/autoraise/autoraiseapp
 brew install --cask github
 brew install --cask windows-app
@@ -337,6 +339,63 @@ end)
 mouseWatcher:start()
 
 hs.alert.show("Left+Right click → Moom Grid (clean)")
+
+-- Make home + end act like Windows
+-- Map Home key to Start of Line
+hs.hotkey.bind({}, "Home", function()
+  hs.eventtap.keyStroke({"cmd"}, "left")
+end)
+
+-- Map End key to End of Line
+hs.hotkey.bind({}, "End", function()
+  hs.eventtap.keyStroke({"cmd"}, "right")
+end)
+
+-- Optional: Map Shift+Home/End to select to start/end of line
+hs.hotkey.bind({"shift"}, "Home", function()
+  hs.eventtap.keyStroke({"cmd", "shift"}, "left")
+end)
+
+hs.hotkey.bind({"shift"}, "End", function()
+  hs.eventtap.keyStroke({"cmd", "shift"}, "right")
+end)
+
+-- Shift + Arrow keys (selection by character / line)
+hs.hotkey.bind({"shift"}, "Left", function()
+  hs.eventtap.keyStroke({"shift"}, "left")
+end)
+
+hs.hotkey.bind({"shift"}, "Right", function()
+  hs.eventtap.keyStroke({"shift"}, "right")
+end)
+
+hs.hotkey.bind({"shift"}, "Up", function()
+  hs.eventtap.keyStroke({"shift"}, "up")
+end)
+
+hs.hotkey.bind({"shift"}, "Down", function()
+  hs.eventtap.keyStroke({"shift"}, "down")
+end)
+
+-- Ctrl + Shift + Arrow keys (selection by word / block)
+-- Windows Ctrl+Shift+Left/Right → macOS Option+Shift+Left/Right
+hs.hotkey.bind({"ctrl", "shift"}, "Left", function()
+  hs.eventtap.keyStroke({"alt", "shift"}, "left")
+end)
+
+hs.hotkey.bind({"ctrl", "shift"}, "Right", function()
+  hs.eventtap.keyStroke({"alt", "shift"}, "right")
+end)
+
+-- Windows Ctrl+Shift+Up/Down → macOS Cmd+Shift+Up/Down
+hs.hotkey.bind({"ctrl", "shift"}, "Up", function()
+  hs.eventtap.keyStroke({"cmd", "shift"}, "up")
+end)
+
+hs.hotkey.bind({"ctrl", "shift"}, "Down", function()
+  hs.eventtap.keyStroke({"cmd", "shift"}, "down")
+end)
+
 ```
 
 # RDP Client / "Windows app"
@@ -350,6 +409,16 @@ hs.alert.show("Left+Right click → Moom Grid (clean)")
 * Using xrdp allows further flexibility in what OS/VM/Remote system is being used.
 
 TODO: Make an AMD64 chroot to run the production version of Chrome for buggy apps.
+
+# KeepingYouAwake
+* Run app
+* Right-click the coffee cup icon in the Menu Bar, choose Settings...
+* General > Start at Login
+* General > Activate on Launch
+* Activation Duration > Indefinitely [Default]
+* Battery > Deactivate when batterty capacity is below 30%.
+* Advanced > Activate when an external display is connected.
+* Updates > disable "Automatically Check for Updates"
 
 # Fonts
 Copy the fonts from the font directory in this repository to `~/Library/Fonts` (or `/Library/Fonts` to install for all users).
