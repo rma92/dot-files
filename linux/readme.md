@@ -502,4 +502,49 @@ Alpine Linux:
 mount -o remount,size=48M /home
 ```
 
-# 
+# KDE Setup
+KDE Setup
+* Window Management > Window Behavior
+  * Window activation policy: Focus follows mouse
+  * Delay focus by: 50 ms
+* Window Management > Desktop Effects
+  * Accessibility: Disable Zoom
+  * Appearance - Disable:
+    * Background Contrast
+    * Blur
+    * Fading Popups
+    * Login
+    * Logout
+    * Maximize
+    * Sliding Popups
+    * Squash
+  * Focus - Disable
+    * Dialog Parent
+  * Peek at Desktop Animation - Disable
+    * Window Aperature
+  * Virtual Desktop Switching Animation - Disable
+    * Slide
+  * Window Management - Disable
+    * Overview
+  * Window Open/Close Animation - Disable
+    * Scale
+* Global Theme 
+  * Window Decorations > Plastik
+    * look for another theme?
+  * Application Style
+    * MS Windows 9x
+  * Colors
+    * Breeze Dark
+* Display & Montior
+  * Compositor - Disable
+    * Enable on startup
+    * Keep applications to block compositing
+
+Taskbar panel
+* Right-click the taskbar panel, Add or Manage widgets
+* Add a Text and Icons Task Manager
+* Remove the Icons-only Task Manager
+* Set panel height to 20px
+
+[https://www.reddit.com/r/kdeneon/comments/1b3403r/quick_guide_to_kwin_tiling/]
+
