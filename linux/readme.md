@@ -52,6 +52,12 @@ cp ../fonts/*.ttf ~/.local/share/fonts/truetype/
 # Vim
 Run in this directory (`linux`) in the dot-files repo:
 ```
+ln -s $(pwd)/.vimrc ~/.vimrc
+ln -s $(pwd)/.vim ~/.vim
+ln -s $(pwd)/.zshrc ~/.zshrc
+```
+Or copy it statically:
+```
 cp -r .vim ~/
 cp .vimrc ~/
 ```
