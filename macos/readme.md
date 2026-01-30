@@ -191,6 +191,7 @@ brew install --cask librewolf
 brew install --cask firefox@esr
 brew install --cask google-chrome
 brew install --cask wine-stable
+brew install --cask notunes
 brew install winetricks
 brew install zenity
 brew install --cask stats
