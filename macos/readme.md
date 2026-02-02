@@ -32,6 +32,10 @@ ln -s $HOME/git-sys/dot-files/linux/.vim $HOME/.vim
       * Use smart quotes and dashes: off
     * Add languages:
       * US International - PC (under English)
+    * Keyboard Shortcuts...
+      * Mission Control: Disable ALL shortcuts [they make using VMs difficult]
+      * **Funciton Keys: Use F1, F2, etc. keys as standard function keys.**
+        * `defautls write -g com.apple.keyboard.fnState -bool true`
 * Mouse: natural scrolling: off
 * Trackpad: Tracking Speed, second from highest.
 * Trackpad: Tap to click: on
@@ -95,6 +99,7 @@ Software Updates (System Preferences) - settings:
 ```
 # disable fn idiot
 defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+defautls write -g com.apple.keyboard.fnState -bool true
 # defaults write NSGlobalDomain com.apple.keyboard.fnState -bool false
 
 # disable Gatekeeper
