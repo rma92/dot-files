@@ -218,7 +218,7 @@ cat << 'EOF' > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
 
 <channel name="xfwm4" version="1.0">
   <property name="general" type="empty">
-    <property name="theme" type="string" value="Chicago95"/>  
+    <property name="theme" type="string" value="Chicago95"/>
     <property name="use_compositing" type="bool" value="false"/>
     <property name="tile_on_move" type="bool" value="true"/>
     <property name="snap_to_border" type="bool" value="false"/>
@@ -502,4 +502,18 @@ Alpine Linux:
 mount -o remount,size=48M /home
 ```
 
-# 
+# Chicago95 Themes UI
+Debian / Xubuntu:
+```
+# sudo apt install python3-svgwrite python3-fonttools inkscape aplay
+sudo apt install python3-svgwrite python3-fonttools inkscape
+
+mkdir -p ~/.config/Chicago95
+wget https://github.com/grassmunk/Chicago95/archive/refs/heads/master.zip -O ~/.config/Chicago95/Chicago95.zip
+unzip ~/.config/Chicago95/Chicago95.zip -d ~/.config/Chicago95/
+```
+Run
+```
+cd ~/.config/Chicago95/Chicago95-master/Plus/
+python3 ./PlusGUI.py
+```
