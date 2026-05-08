@@ -150,3 +150,22 @@ $cmd = "svn export https://github.com/rma92/dot-files/trunk/fonts"
 iex $cmd
 ```
 -->
+
+# Browsers
+Some system configs that manage installing adblockers, etc. are present in the Linux and Windows directories.
+
+## Chrome
+### Toggle Disable Fonts
+* Install the [Stylus extension](https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne).
+* Click the menu, add a new custom style for everywhere called "Disable Fonts"
+* Add the following code:
+```
+* {
+  font-family: system-ui, sans-serif !important;
+}
+```
+* This can be toggled from the extension's menu.
+* It may be desirable to add the Stylus icon to the toolbar at all times.
+
+### AutoPlay
+[AutoplayStopper (MV3)](https://chromewebstore.google.com/detail/autoplaystopper-mv3/gcendpekmacfohmhhkbhejjfbepkkkib)

@@ -9,7 +9,12 @@ compinit
 #TODO: This should have a timeout.
 # End of lines added by compinstall
 unsetopt beep
-export ZHOSTNAME="`hostname -f`"
+#export ZHOSTNAME="`hostname -f`"
+export ZHOSTNAME="$(
+  { hostname -f 2>/dev/null || hostname -F 2>/dev/null || hostname 2>/dev/null || print -r -- "${HOST:-$HOSTNAME}"; } \
+  | awk 'NF{print; exit}'
+)"
+
 export ZPROMPT="$"
 export ZUSERNAME="`whoami`"
 if [ $ZUSERNAME = "root" ]; then
@@ -77,13 +82,26 @@ function precmd() {
 #else
 #  : # this is not a git repository
 #fi
-  prompt_header="\e[4m \e[0m${timer_show}s $ZEXITSTR $ZUSERNAMESTR@$ZHOSTNAME `pwd`"
-  prompt_header_no_f=`echo $prompt_header | sed 's/\x1b\[[0-9;]*m//g'`
-  iprompt_header=`expr length $prompt_header_no_f`
-  #append underlined empty to the string
-  drawline=""
-  for i in {`expr length $prompt_header_no_f`..`expr $COLUMNS - 3`}; drawline=" $drawline"
-  echo -e $prompt_header"\e[4m"$drawline"\e[0m"
+
+# Raw header may include literal backslash escapes like \e[32m
+prompt_header_raw=" ${timer_show}s ${ZEXITSTR} ${ZUSERNAMESTR}@${ZHOSTNAME} ${PWD}"
+
+# Expand \e, \n, etc into real control characters
+prompt_header_expanded=$(printf '%b' "$prompt_header_raw")
+
+# Strip ANSI CSI sequences (now they are real ESC bytes)
+setopt localoptions extendedglob
+prompt_header_no_ansi=${prompt_header_expanded//$'\e'\[[0-9\;]##m/}
+
+iprompt_header=${#prompt_header_no_ansi}
+
+cols=${COLUMNS:-$(tput cols 2>/dev/null || echo 80)}
+fill=$(( cols - 3 - iprompt_header ))
+(( fill < 0 )) && fill=0
+drawline=${(l:$fill:: :)""}
+
+# Print: %b interprets escapes in the underline + reset sequences too
+printf '%b\n' "$prompt_header_expanded"$'\e[4m'"$drawline"$'\e[0m'
 
   #eternal history
   echo $$ $ZUSERNAME $ZHOSTNAME $ZEXITONE "$(history -i -1)" >> ~/.eternal_history

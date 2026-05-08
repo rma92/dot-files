@@ -29,8 +29,9 @@ endif
 
 if has('gui_running')
   if has("gui_gtk2") || has("gui_gtk3")
-    set guifont=Hack\ 14
-    set guifont=Bloomberg\ Fixed\ Unicode\ N\ 20
+    "set guifont=Hack\ 14
+    "set guifont=Bloomberg\ Fixed\ Unicode\ N\ 20
+    set guifont=TextMode92X\ 16
   elseif has("gui_photon")
     set guifont=Hack:s14
   elseif has("gui_kde")

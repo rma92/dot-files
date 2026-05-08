@@ -31,7 +31,7 @@ while read -r line; do
             # echo "button=$button etype=$etype left=$left right=$right trig=$triggered"
 
             if [ "$left" -eq 1 ] && [ "$right" -eq 1 ] && [ "$triggered" -eq 0 ]; then
-                /usr/bin/deskgrid &
+                deskgrid &
                 triggered=1
             fi
 

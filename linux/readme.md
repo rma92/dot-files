@@ -1,6 +1,66 @@
 # Linux Config
 Contains themes, and config files, and window management tools.
 
+# Set up everything (user)
+```
+mkdir -p ~/.bin
+echo 'export PATH="$HOME/.bin:$PATH"' >> "$HOME/.profile"
+cp -r .vim ~/
+cp .vimrc ~/
+mkdir -p ~/.local/share/fonts/truetype
+cp ../fonts/*.ttf ~/.local/share/fonts/truetype/
+cp bin_user/deskgrid ~/.bin
+cp bin_user/deskgrid-invoke ~/.bin
+chmod +x ~/.bin/deskgrid-invoke
+chmod +x ~/.bin/deskgrid
+
+mkdir -p /tmp/Chicago95/
+unzip -q theme-zip/Chicago95_v3.0.1.zip -d /tmp/Chicago95/
+ls /tmp/Chicago95/Chicago95-3.0.1/
+mkdir -p ~/.themes
+mkdir -p ~/.icons
+cp -r /tmp/Chicago95/Chicago95-3.0.1/Theme/Chicago95 ~/.themes/
+cp -r /tmp/Chicago95/Chicago95-3.0.1/Icons/* ~/.icons/
+
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/deskgrid-invoke.desktop << EOF
+[Desktop Entry]
+Type=Application
+Exec="$HOME/.bin/deskgrid-invoke"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Terminal=false
+Name=Deskgrid Invoke
+Comment=Run deskgrid-invoke on login
+EOF
+
+# apk add xdotool xwininfo xprop slop xinput
+# apt install -y xdotool slop xinput wmctrl
+
+```
+# Fonts
+(All users/root) Run in this directory (`linux`) in the dot-files repo:
+```
+cp ../fonts/*.ttf /usr/share/fonts/truetype/
+```
+(Current user)
+```
+mkdir -p ~/.local/share/fonts/truetype
+cp ../fonts/*.ttf ~/.local/share/fonts/truetype/
+```
+# Vim
+Run in this directory (`linux`) in the dot-files repo:
+```
+cp -r .vim ~/
+cp .vimrc ~/
+```
+# Fix hissing noise on Devuan and Arch on some laptops
+```
+sudo apt update
+sudo apt install alsa-tools
+sudo hda-verb /dev/snd/hwC0D0 0x1d SET_PIN_WIDGET_CONTROL 0x0
+```
 # Deskgrid
 This is deskgrid from Mabox-Linux.
 Dependencies: xdotool, xwininfo, xprop, slop, xinput, wmctrl
@@ -19,6 +79,38 @@ May want to set:
 Bugs:
 * on Xfce, the title bar and window borders are not accounted for when tiling the windows into the grid (they overlap for the areas outside the client area)
 
+Copy to `/usr/bin` (as root):
+```
+# Devuan 6, Debian 13, Ubuntu 24.04
+# doas apt install xdotool slop xinput wmctrl
+# Alpine - compile wmctrl if architecture is not AMD64
+# apk add xdotool xwininfo xprop slop xinput
+# cp bin_alpine64/wmctrl /usr/bin
+# cd bin
+cp deskgrid /usr/bin
+cp deskgrid-invoke /usr/bin
+cp drawgrid /usr/bin
+cp superclick /usr/bin
+chmod +x /usr/bin/deskgrid
+chmod +x /usr/bin/deskgrid-invoke
+chmod +x /usr/bin/drawgrid
+chmod +x /usr/bin/superclick
+```
+Add to current user autostart:
+```
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/deskgrid-invoke.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/deskgrid-invoke
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Terminal=false
+Name=Deskgrid Invoke
+Comment=Run deskgrid-invoke on login
+EOF
+```
 ## Alpine setup (tar.gz amd64)
 extract drawgrid_bin_alpine64.tar.gz to /usr/bin.
 Make deskgrid-invoke autostart:
@@ -126,7 +218,7 @@ cat << 'EOF' > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
 
 <channel name="xfwm4" version="1.0">
   <property name="general" type="empty">
-    <property name="theme" type="string" value="Chicago95"/>  
+    <property name="theme" type="string" value="Chicago95"/>
     <property name="use_compositing" type="bool" value="false"/>
     <property name="tile_on_move" type="bool" value="true"/>
     <property name="snap_to_border" type="bool" value="false"/>
@@ -182,7 +274,7 @@ cat << 'EOF' > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
           </property>
           <property name="image-style" type="int" value="0"/>
         </property>
-      </property>      
+      </property>
     </property>
   </property>
 </channel>
@@ -410,4 +502,18 @@ Alpine Linux:
 mount -o remount,size=48M /home
 ```
 
-# 
+# Chicago95 Themes UI
+Debian / Xubuntu:
+```
+# sudo apt install python3-svgwrite python3-fonttools inkscape aplay
+sudo apt install python3-svgwrite python3-fonttools inkscape
+
+mkdir -p ~/.config/Chicago95
+wget https://github.com/grassmunk/Chicago95/archive/refs/heads/master.zip -O ~/.config/Chicago95/Chicago95.zip
+unzip ~/.config/Chicago95/Chicago95.zip -d ~/.config/Chicago95/
+```
+Run
+```
+cd ~/.config/Chicago95/Chicago95-master/Plus/
+python3 ./PlusGUI.py
+```
