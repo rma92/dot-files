@@ -1,0 +1,18 @@
+Set up a portable Vultr Citrix XenApp 6.5 Image Master Demo Image
+* Install Windows 2008 R2 + virtio drivers.  Can deploy the image and use dism /add-driver for vioscsi and vionet
+* Install Citrix
+* Ideally, compress the system.
+* Boot into WinPE, delete the Terminal Server Licensing Key (see below)
+* Use Ghost to make an image of the compressed volume
+* Deploy it to a new VM with the smallest reasonable disk, bcdboot T:\Windows
+
+* boot into Winpe
+* run regedit
+* click HKEY_LOCAL_MACHINE
+* File > Load Hive...
+* C:\WINDOWS\SYSTEM32\DRIVERS\SYSTEM (may be different drive letter)
+* call it sys
+* Go to HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Terminal Server\RCM\GracePeriod
+* Delete the timebomb key
+* Repeat for ControlSet002
+* reboot
