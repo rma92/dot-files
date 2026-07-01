@@ -496,7 +496,7 @@ dd if=/dev/zero of=/EMPTY bs=1M
 rm /EMPTY
 ```
 
-# Enlarge a running tmpfs 
+# Enlarge a running tmpfs
 Alpine Linux:
 ```
 mount -o remount,size=48M /home
